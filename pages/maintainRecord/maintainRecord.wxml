@@ -1,0 +1,29 @@
+<!--pages/maintainRecord/maintainRecord.wxml-->
+<view class='view-container'>
+    <block wx:for='{{articles}}' wx:key='{{item.id}}'>
+        <view class='articles-container'>
+            <view class='info'>
+                <view class="p" hover-class="none" hover-stop-propagation="false">
+                    <text class='created-at'>{{item.nickname}}</text> :
+                    <text class='category'>{{item.category}}</text>
+                </view>
+                <view class="p" hover-class="none" hover-stop-propagation="false">
+                    <text class='created-at'>{{item.created_at}}</text> :
+                    <text class='category'>{{item.category}}</text>
+                </view>
+            </view>
+            <!-- <view class="btn" data-item="{{item}}" bindtap="bindTurnDetail" hover-class="none" hover-stop-propagation="false">
+                查看详情
+            </view> -->
+            <view class="status {{index%3 == 1?'active':'finished'}}" hover-class="none" hover-stop-propagation="false">
+                {{index%3 == 1?'进行中':'已结束'}}
+            </view>
+        </view>
+    </block>
+    <van-button type="info" class="add" round hover-class="none" hover-stop-propagation="false">
+        新增保养任务
+    </van-button>
+    <view class='data-loading' hidden='{{hidden}}'>
+        数据加载中...
+    </view>
+</view>

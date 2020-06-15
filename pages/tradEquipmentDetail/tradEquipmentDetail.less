@@ -1,0 +1,112 @@
+.top-padding{
+    height: 30rpx;
+    width: 100%;
+    // background: #F5F5F7;
+}
+.base{
+    min-height: 270rpx;
+    box-sizing: border-box;
+    background: white;
+    width: 100%;
+    padding: 16rpx 30rpx;
+    font-size:32rpx;
+    font-family:PingFang SC;
+    color:rgba(51,51,51,1);
+    line-height:60rpx;
+    margin-bottom: 20rpx;
+    position: relative;
+    .status{
+        width: 120rpx;
+        height: 60rpx;
+        position: absolute;
+        border-radius:30rpx 0rpx 0rpx 30rpx;
+        font-size:28rpx;
+        text-align: center;
+        font-family:PingFang SC;
+        color:rgba(255,255,255,1);
+        line-height:60rpx;
+        right: 0;
+        top: 13rpx;
+        &.active{
+            background: #0FC37C;
+        }
+        &.warning{
+            background: #FD545C;
+        }
+    }
+}
+.detail{
+    background: white;
+    width: 100%;
+    margin-top: 20rpx;
+    box-sizing: border-box;
+    .title{
+        width: 100%;
+        box-sizing: border-box;
+        // height: 90rpx;
+        border-bottom: 1rpx solid rgba(238,238,238,.8);
+        line-height: 90rpx;
+        font-size:34rpx;
+        font-family:PingFang SC;
+        font-weight:bold;
+        color:rgba(51,51,51,1);
+        padding-left: 30rpx;
+    }
+    .detail-item{
+        box-sizing: border-box;
+        padding: 20rpx 0 20rpx 30rpx;
+        border-bottom: 1rpx solid rgba(238,238,238,.8);
+        .images{
+            box-sizing: border-box;
+            display: flex;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            align-items: center;
+            overflow-x: scroll;
+            margin-bottom: 20rpx;
+            >image{
+                width: 220rpx;
+                height: 180rpx;
+                margin-top: 10rpx;
+                margin-right: 15rpx;
+            }
+        }
+        .info{
+            font-size:30rpx;
+            font-family:PingFang SC;
+            color:rgba(51,51,51,1);
+            line-height:48rpx;
+            .p{
+                box-sizing: border-box;
+                padding-right: 30rpx;
+            }
+            .p-detial{
+                display: flex;
+                box-sizing: border-box;
+                justify-content: space-between;
+                align-items: center;
+                >view{
+                    flex: 1;
+                    word-wrap:break-word; 
+                    word-break:break-all; 
+                    overflow: hidden;
+                    &.right{
+                        flex: none;
+                        width: 100rpx;
+                    }
+                }
+            }
+            .color{
+                color: #666666;
+            }
+        }
+
+    }
+}
+.data-loading {  
+    height: 100rpx;  
+    line-height: 100rpx;  
+    background: #F5F5F7;  
+    text-align: center;  
+    font-size: 14px;  
+}  

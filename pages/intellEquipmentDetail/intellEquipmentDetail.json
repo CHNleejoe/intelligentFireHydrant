@@ -1,0 +1,9 @@
+{
+    "usingComponents": {
+        "van-tab": "@vant/weapp/tab/index",
+        "van-tabs": "@vant/weapp/tabs/index",
+        "van-button": "@vant/weapp/button/index",
+        "ec-canvas": "../../ec-canvas/ec-canvas"
+    },
+    "navigationBarTitleText": "设备详情"
+}

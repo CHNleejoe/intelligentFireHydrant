@@ -1,0 +1,12 @@
+<!--logs.wxml-->
+<van-cell-group class="mine">
+    <van-cell class="user" title="安琪拉" value="已认证">
+        <image src='../../statics/imgs/yujing.png' slot="icon" class="avatar">
+
+        </image>
+    </van-cell>
+    <van-cell title="姓名" value="李思思" />
+    <van-cell title="联系方式" value="13425566688" />
+    <van-cell title="账户类型" value="物业公司" />
+    <van-cell title="所属公司" value="华瀚控股物业有限公司" />
+</van-cell-group>

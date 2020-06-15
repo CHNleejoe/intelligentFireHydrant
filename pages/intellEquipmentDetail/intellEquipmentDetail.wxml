@@ -1,0 +1,89 @@
+<!--pages/equipmentDetail/equipmentDetail.wxml-->
+<view class="top-padding" hover-class="none" hover-stop-propagation="false">
+</view>
+<view class="base" hover-class="none" hover-stop-propagation="false">
+    <view class="p" hover-class="none" hover-stop-propagation="false">
+        SN码：X502PX
+    </view>
+    <view class="p" hover-class="none" hover-stop-propagation="false">
+        SN码：X502PX
+    </view>
+    <view class="p" hover-class="none" hover-stop-propagation="false">
+        SN码：X502PX
+    </view>
+    <view class="p" hover-class="none" hover-stop-propagation="false">
+        S SN码：X502PX 当前参数值：2.1pa 参数采集时间：2020-04-20 设备地址：
+    </view>
+    <view class="status active" hover-class="none" hover-stop-propagation="false">
+        启用中
+    </view>
+</view>
+
+<van-tabs active="{{ active }}" bind:change="onChange" class="tabs-section" bind:click="onClick" color='#3091F2'>
+    <van-tab class="monitor" title="参数监控">
+        <view class="charts-btns" hover-class="none" hover-stop-propagation="false">
+            <van-button class="charts-btns-item" size="small" type="primary" data-flag="0" bindtap='addOrReduceDate'>前一天</van-button>
+            <view class="time">
+                {{time}}
+            </view>
+            <van-button class="charts-btns-item" size="small" type="primary" data-flag="1" bindtap='addOrReduceDate'>后一天</van-button>
+        </view>
+        <view class="echart_panel">
+            <ec-canvas ec="{{ ecLine }}"></ec-canvas>
+        </view>
+        <view class="table" hover-class="none" hover-stop-propagation="false">
+            <view class="table-head">
+                <view class="table-head-item flex-1">
+                    序号
+                </view>
+                <view class="table-head-item">
+                    采集时间
+                </view>
+                <view class="table-head-item">
+                    压力
+                </view>
+                <view class="table-head-item">
+                    设备电压
+                </view>
+                <view class="table-head-item">
+                    接受时间
+                </view>
+            </view>
+            <view class="table-list" wx:for="{{3}}" hover-class="none" hover-stop-propagation="false">
+                <view class="table-list-item flex-1">
+                    {{index + 1}}
+                </view>
+                <view class="table-list-item">
+                    2010-10-30 12:33:33
+                </view>
+                <view class="table-list-item">
+                    压力
+                </view>
+                <view class="table-list-item">
+                    设备电压
+                </view>
+                <view class="table-list-item">
+                    2010-10-31 12:11:33
+                </view>
+            </view>
+        </view>
+    </van-tab>
+    <van-tab class="warning" title="预警信息">
+        <view class="warning-item" hover-class="none" hover-stop-propagation="false" wx:for='{{4}}' wx:key='warningItem' wx:for-item='warningItem'>
+            <view class="inner" hover-class="none" hover-stop-propagation="false">
+                <view class="p time">
+                    2020-04-21 17:35:46
+                </view>
+                <view class="p title">
+                    站点编码:xiaofx202001
+                </view>
+                <view class="p title">
+                    SN码:X481PX
+                </view>
+                <view class="p title">
+                    预警名称:压力上下限告警
+                </view>
+            </view>
+        </view>
+    </van-tab>
+</van-tabs>

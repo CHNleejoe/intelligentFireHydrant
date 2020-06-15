@@ -1,0 +1,53 @@
+<!--pages/tradEquipmentDetail/tradEquipmentDetail.wxml-->
+<view class="top-padding" hover-class="none" hover-stop-propagation="false">
+</view>
+<view class="base" hover-class="none" hover-stop-propagation="false">
+    <view class="p" hover-class="none" hover-stop-propagation="false">
+        SN码：X502PX
+    </view>
+    <view class="p" hover-class="none" hover-stop-propagation="false">
+        SN码：X502PX
+    </view>
+    <view class="p" hover-class="none" hover-stop-propagation="false">
+        SN码：X502PX
+    </view>
+    <view class="p" hover-class="none" hover-stop-propagation="false">
+        S SN码：X502PX 当前参数值：2.1pa 参数采集时间：2020-04-20 设备地址：
+    </view>
+    <view class="status active" hover-class="none" hover-stop-propagation="false">
+        启用中
+    </view>
+</view>
+<view class="detail" hover-class="none" hover-stop-propagation="false">
+    <view class="title" hover-class="none" hover-stop-propagation="false">
+        保养信息
+    </view>
+    <view class="detail-item" wx:for="{{3}}" wx:key='{{index}}' wx:for-item="detailItem" hover-class="none" hover-stop-propagation="false">
+        <view class="images" hover-class="none" hover-stop-propagation="false">
+            <image wx:for='{{imgs}}' wx:for-item='imageItem' wx:key='{{index}}' data-detailItem="{{detailItem}}" data-current="{{imageItem}}" bindtap='previewImages' class="images-item" src="{{imageItem}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror=""
+                bindload="">
+            </image>
+        </view>
+        <view class="info" hover-class="none" hover-stop-propagation="false">
+            <view class="p">
+                维护公司：<text class="color"></text>
+            </view>
+            <view class="p">
+                维护人员：<text class="color">1231231231212312312312</text>
+            </view>
+            <view class="p">
+                维护时间：<text class="color">asds</text>
+            </view>
+            <view class="p">
+                维护项目：
+                <view class="p-detial color" wx:for='{{3}}' wx:key='{{index}}'>
+                    <view>管道维修:</view>
+                    <view class="right">不合格</view>
+                </view>
+            </view>
+        </view>
+    </view>
+    <view class='data-loading' hidden='{{hidden}}'>
+        数据加载中...
+    </view>
+</view>

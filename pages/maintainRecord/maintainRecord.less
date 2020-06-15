@@ -1,0 +1,110 @@
+.view-container {  
+    background: #F5F5F7;  
+    padding-top: 30rpx;
+  }  
+    
+  .data-loading {  
+    height: 100rpx;  
+    line-height: 100rpx;  
+    background: #F5F5F7;  
+    text-align: center;  
+    font-size: 14px;  
+  }  
+    
+  .articles-container {  
+    border-bottom: 1px solid #eee;  
+    margin-bottom: 20rpx;
+    background: white; 
+    min-height: 362rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    .btn{
+        height: 92rpx;
+        line-height: 92rpx;
+        box-sizing: border-box;
+        border-top: 1rpx solid rgba(238,238,238,.8);
+        width: 100%;
+        text-align: center;
+        font-size:32rpx;
+        font-family:PingFang SC;
+        color:rgba(48,145,242,1);
+        
+    }
+    .status{
+        width: 120rpx;
+        height: 60rpx;
+        position: absolute;
+        border-radius:30rpx 0rpx 0rpx 30rpx;
+        font-size:28rpx;
+        text-align: center;
+        font-family:PingFang SC;
+        color:rgba(255,255,255,1);
+        line-height:60rpx;
+        right: 0;
+        top: 13rpx;
+        &.active{
+            background: #0FC37C;
+        }
+        &.finished{
+            background: #609EF7;
+        }
+    }
+  }  
+    
+  .articles-container .info {  
+    font-size: 12px;  
+    height: 100%;  
+    width: 100%;
+    display: inline-block;  
+    box-sizing: border-box;
+    padding: 12rpx 30rpx;
+    .p{
+        font-size:32rpx;
+        font-family:PingFang SC;
+        color:rgba(51,51,51,1);
+        line-height:60rpx;
+    }
+  }  
+    
+  .articles-container .info .avatar {  
+    width: 60rpx;  
+    height: 60rpx;  
+    margin-right: 10rpx;  
+    border-radius: 60rpx;  
+    display: inline-block;  
+    vertical-align: middle;  
+  }  
+    
+  .articles-container .info .created-at {  
+    // display: inline-block;  
+    vertical-align: middle;  
+  }  
+    
+  .articles-container .info .category {  
+    color: #3399ea;  
+    display: inline-block;  
+    vertical-align: middle;  
+  } 
+
+  .add{
+    width:350rpx;
+    height:90rpx;
+    background:rgba(96,158,247,1);
+    border-radius:45rpx;
+    // overflow: hidden;
+    position: fixed;
+    color: white;
+    font-size:32rpx;
+    font-family:PingFang SC;
+    line-height:54rpx;
+    z-index: 2;
+    bottom: 140rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    >button{
+        width: 100%;
+    }
+  }

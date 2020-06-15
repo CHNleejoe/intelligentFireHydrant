@@ -1,0 +1,25 @@
+.mine {
+  min-height: 100rpx;
+  background: white;
+  width: 100%;
+}
+.mine .user .van-cell__title {
+  display: flex;
+  align-items: center;
+  text-indent: 21rpx;
+  font-size: 36rpx;
+  font-family: PingFang SC;
+  color: #333333;
+}
+.mine .user .van-cell__value {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 32rpx;
+  font-family: PingFang SC;
+}
+.mine .avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 10rpx;
+}

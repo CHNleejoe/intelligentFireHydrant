@@ -1,0 +1,10 @@
+{
+    "usingComponents": {
+        "van-button": "@vant/weapp/button/index"
+    },
+    "navigationBarTitleText": "保养记录",
+    "enablePullDownRefresh": true,
+    "onReachBottomDistance": 0,
+    "backgroundTextStyle": "light",
+    "backgroundColor": "#F5F5F7"
+}

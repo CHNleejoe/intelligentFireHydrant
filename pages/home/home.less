@@ -1,0 +1,85 @@
+.saoma{
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    image {
+        width: 240rpx;
+        height: 228rpx;
+        margin-top: 281rpx;
+    }
+    text{
+        font-size:38rpx;
+        font-family:PingFang SC;
+        font-weight:bold;
+        color:rgba(102,102,102,1);
+        line-height:48rpx;
+    }
+}
+.map{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    >map{
+        height: 540rpx;
+        width: 100%;
+    }
+    .warning{
+        flex: 1;
+        width: 100%;
+        // background: gold;
+        overflow: scroll;
+        .title{
+            height: 90rpx;
+            box-sizing: border-box;
+            padding-left: 30rpx;
+            line-height: 90rpx;
+            font-size:34rpx;
+            font-family:PingFang SC;
+            font-weight:bold;
+            color:rgba(51,51,51,1);
+            border-bottom: 1rpx solid rgba(238,238,238,.8);
+            background: white;
+        }
+        .list{
+            padding-left: 30rpx;
+            box-sizing: border-box;
+            background: white;
+            .item{
+                padding-left: 47rpx;
+                padding-top: 16rpx;
+                padding-bottom: 8rpx;
+                min-height: 180rpx;
+                border-bottom: 1rpx solid rgba(238,238,238,.8);
+                position: relative;
+                line-height: 48rpx;
+                font-size:32rpx;
+                font-family:PingFang SC;
+                font-weight:bold;
+                color:rgba(51,51,51,1);
+                transition: all .5s;
+                &:active{
+                    background: #eee;
+                }
+                &.active{
+                    background: #eee;
+                }
+                >image{
+                    position: absolute;
+                    top: 23rpx;
+                    left: 0;
+                    width:27rpx;
+                    height:34rpx;
+                }
+                .p{
+                    font-size:28rpx;
+                    font-family:PingFang SC;
+                    color:rgba(102,102,102,1);
+                    line-height: 40rpx;
+                }
+            }
+        }
+    }
+}

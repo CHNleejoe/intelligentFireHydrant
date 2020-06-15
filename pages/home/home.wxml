@@ -1,0 +1,35 @@
+<!--pages/home/home.wxml-->
+<view class="saoma" wx:if='{{userType == 1}}'>
+    <image src="../../statics/imgs/saoma.png">
+    </image>
+    <text class="" selectable="false" space="false" decode="false">
+    扫码查询参数
+  </text>
+</view>
+<view class="map" wx:else hover-class="none" hover-stop-propagation="false">
+    <map name="homeMap" id="homeMap" longitude='{{mapData.longitude}}' latitude='{{mapData.latitude}}' scale='{{mapData.scale}}' markers="{{markers}}" show-location='true'></map>
+    <view class="warning" hover-class="none" hover-stop-propagation="false">
+        <view class="title" hover-class="none" hover-stop-propagation="false">
+            实时预警
+        </view>
+        <view class="list" hover-class="none" hover-stop-propagation="false">
+            <view wx:for='{{markers}}' class="item {{index === markerIndex?'active':''}}" data-index="{{index}}" hover-class="none" bindtap='changeMarker' hover-stop-propagation="false">
+                <view class="time" hover-class="none" hover-stop-propagation="false">
+                    2020-01-22 12:22:33
+                </view>
+                <view class="p" hover-class="none" hover-stop-propagation="false">
+                    预警名称:压力上下限告警
+                </view>
+                <view class="p" hover-class="none" hover-stop-propagation="false">
+                    预警名称:压力上下限告警
+                </view>
+                <view class="p" hover-class="none" hover-stop-propagation="false">
+                    预警名称:压力上下限告警
+                </view>
+                <image class="" src="../../statics/imgs/tixing.png" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="">
+
+                </image>
+            </view>
+        </view>
+    </view>
+</view>

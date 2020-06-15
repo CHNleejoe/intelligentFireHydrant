@@ -1,0 +1,8 @@
+{
+    "usingComponents": {},
+    "navigationBarTitleText": "设备详情",
+    "enablePullDownRefresh": true,
+    "onReachBottomDistance": 0,
+    "backgroundTextStyle": "light",
+    "backgroundColor": "#F5F5F7"
+}

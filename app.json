@@ -1,0 +1,53 @@
+{
+    "pages": [
+        "pages/home/home",
+        "pages/toMaintainSec/toMaintainSec",
+        "pages/toMaintain/toMaintain",
+        "pages/addMaintainTask/addMaintainTask",
+        "pages/maintainRecord/maintainRecord",
+        "pages/mine/mine",
+        "pages/maintainDetail/maintainDetail",
+        "pages/maintainInfo/maintainInfo",
+        "pages/tradEquipmentDetail/tradEquipmentDetail",
+        "pages/tradition/tradition",
+        "pages/intellEquipmentDetail/intellEquipmentDetail",
+        "pages/intelligent/intelligent",
+        "pages/function/function",
+        "pages/index/index"
+    ],
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#3091F2",
+        "navigationBarTitleText": "智慧消防",
+        "navigationBarTextStyle": "white"
+    },
+    "tabBar": {
+        "color": "#a9b7b7",
+        "selectedColor": "#3091F2",
+        "borderStyle": "white",
+        "list": [{
+                "selectedIconPath": "statics/imgs/home.png",
+                "iconPath": "statics/imgs/home_not.png",
+                "pagePath": "pages/home/home",
+                "text": "首页"
+            },
+            {
+                "selectedIconPath": "statics/imgs/function.png",
+                "iconPath": "statics/imgs/function_not.png",
+                "pagePath": "pages/function/function",
+                "text": "功能"
+            },
+            {
+                "selectedIconPath": "statics/imgs/my.png",
+                "iconPath": "statics/imgs/my_not.png",
+                "pagePath": "pages/mine/mine",
+                "text": "个人中心"
+            }
+        ]
+    },
+    "style": "v2",
+    "sitemapLocation": "sitemap.json",
+    "usingComponents": {
+        "van-button": "@vant/weapp/button/index"
+    }
+}

@@ -1,0 +1,18 @@
+<!--pages/toMaintain/toMaintain.wxml-->
+<van-cell-group>
+    <van-cell title="计划开始时间" value="{{planBeginDate}}" />
+    <van-cell title="计划结束时间" value="{{planEndDate}}" />
+    <van-cell title="设备数量(台)" value="{{equipmentNum}}" />
+    <van-cell title="已保养数量(台)" value="{{maintainedEquipmentNum}}" />
+    <van-cell title="建筑单位名称" value="{{buildingName}}" />
+    <van-cell title="建筑地址" value="{{buildingAdress}}" />
+    <van-cell title="所属物业公司" value="{{companyName}}" />
+    <view class="to-detail" hover-class="none" hover-stop-propagation="false">
+        查看详情
+    </view>
+    <view class="saoma" hover-class="none" hover-stop-propagation="false">
+        <image class="" src="../../statics/imgs/saoma_small.png" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="">
+
+        </image>
+    </view>
+</van-cell-group>
