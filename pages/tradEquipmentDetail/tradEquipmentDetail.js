@@ -1,4 +1,8 @@
 // pages/tradEquipmentDetail/tradEquipmentDetail.js
+var util = require('../../utils/util.js');
+var api = require('../../net/api.js');
+var http = require('../../net/http.js');
+const app = getApp()
 Page({
 
     /**
@@ -11,23 +15,14 @@ Page({
             'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589189896788&di=e988899afe8b60f2b1e07b41d9ecb8a5&imgtype=0&src=http%3A%2F%2Fgss0.baidu.com%2F9vo3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2F3b292df5e0fe99257d8c844b34a85edf8db1712d.jpg',
             'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589189896790&di=33ebf4041df00bb3b59158ca576fa003&imgtype=0&src=http%3A%2F%2Fb2-q.mafengwo.net%2Fs5%2FM00%2F91%2F06%2FwKgB3FH_RVuATULaAAH7UzpKp6043.jpeg'
         ],
+        pageNo: 1,
+        pageSize: 10,
+        maxCount: null,
         /**
-         * 需要访问的url
+         * 获取到的列表数据
          */
-        urls: [
-            'https://www.csdn.net/api/articles?type=more&category=home&shown_offset=0',
-            'https://www.csdn.net/api/articles?type=new&category=arch',
-            'https://www.csdn.net/api/articles?type=new&category=ai',
-            'https://www.csdn.net/api/articles?type=new&category=newarticles'
-        ],
-        /**
-         * 当前访问的url索引
-         */
-        currentUrlIndex: 0,
-        /**
-         * 获取到的文章
-         */
-        articles: [],
+        detailData: [],
+        options: {},
         /**
          * 控制上拉到底部时是否出现 "数据加载中..."
          */
@@ -37,6 +32,16 @@ Page({
          */
         loadingData: false
 
+    },
+    /**
+     * 生命周期函数--监听页面加载
+     */
+    onLoad: function(options) {
+        options.deviceInfo = JSON.parse(options.deviceInfo)
+        this.setData({
+            options: options
+        })
+        this.loadData(false, options);
     },
     /**
      * 
@@ -54,64 +59,33 @@ Page({
         })
     },
     /**
-     * 生命周期函数--监听页面加载
-     */
-    onLoad: function(options) {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面初次渲染完成
-     */
-    onReady: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面显示
-     */
-    onShow: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload: function() {
-
-    },
-    /**
      * 加载数据
      */
-    loadData: function(tail, callback) {
-        var that = this,
-            urlIndex = that.data.currentUrlIndex;
-        wx.request({
-            url: that.data.urls[urlIndex],
-            success: function(r) {
-                var oldArticles = that.data.articles,
-                    newArticles = tail ? oldArticles.concat(r.data.articles) : r.data.articles;
-                that.setData({
-                    articles: newArticles,
-                    currentUrlIndex: (urlIndex + 1) >= that.data.urls.length ? 0 : urlIndex + 1
-                });
-                if (callback) {
-                    callback();
-                }
-            },
-            error: function(r) {
-                console.info('error', r);
-            },
-            complete: function() {}
-        });
+    loadData: function(tail, options, callback) {
+        var that = this;
+        var url = api.traditionDetailByDeviceId
+        let deviceId = options.deviceInfo ? options.deviceInfo.deviceId : that.data.options.deviceInfo.deviceId,
+            pageNo = that.data.pageNo,
+            pageSize = that.data.pageSize;
+        http.get(url, {
+            deviceId,
+        }, res => {
+            console.log('traditionDetailByDeviceId', res)
+            res.b.status_label = util.parseDictionary(app, 'device_status', res.b.status)
+            res.b.status == 0 && (res.b.status_class = 'stop')
+            res.b.status == 1 && (res.b.status_class = 'active')
+            res.b.status == 2 && (res.b.status_class = 'maintain')
+            that.setData({
+                detailData: res.b,
+                maxCount: res.b.count
+            });
+            if (callback) {
+                callback();
+            }
+        })
+
     },
+
     /**
      * 监听用户下拉动作
      */
@@ -128,8 +102,11 @@ Page({
         // wx.showLoading({
         //   title: '数据加载中...',
         // });
+        that.setData({
+            pageNo: 1
+        })
         setTimeout(function() {
-            that.loadData(false, () => {
+            that.loadData(false, {}, () => {
                 that.setData({
                     loadingData: false
                 });
@@ -145,10 +122,18 @@ Page({
      * 页面上拉触底事件的处理函数
      */
     onReachBottom: function() {
+        return
         console.info('onReachBottom');
         var hidden = this.data.hidden,
             loadingData = this.data.loadingData,
             that = this;
+        if (that.data.listData.length >= that.data.maxCount) {
+            this.setData({
+                hidden: true,
+                loadingData: false
+            });
+            return
+        }
         if (hidden) {
             this.setData({
                 hidden: false
@@ -167,22 +152,13 @@ Page({
             title: '数据加载中...',
         });
 
-        setTimeout(function() {
-            that.loadData(true, () => {
-                that.setData({
-                    hidden: true,
-                    loadingData: false
-                });
-                wx.hideLoading();
+        that.loadData(true, {}, () => {
+            that.setData({
+                hidden: true,
+                loadingData: false
             });
-            console.info('上拉数据加载完成.');
-        }, 1000);
-    },
-
-    /**
-     * 用户点击右上角分享
-     */
-    onShareAppMessage: function() {
-
+            wx.hideLoading();
+        });
+        console.info('上拉数据加载完成.');
     }
 })

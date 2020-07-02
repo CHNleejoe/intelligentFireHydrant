@@ -2,14 +2,20 @@
 <van-cell-group>
     <van-cell title="计划开始时间" is-link bind:click="openBeginTimePickerControl" value="{{planBeginDate}}" />
     <van-cell title="计划结束时间" bind:click="openEndTimePickerControl" is-link value="{{planEndDate}} " />
-    <van-field value="{{ buildingName }}" label="建筑单位名称" clearable placeholder="请输入建筑单位名称" input-align="right" />
+    <!-- <van-field value="{{buildingName}}" label="建筑单位名称" readonly input-align="right" /> -->
+    <!-- <van-field value="{{ buildingName }}" label="建筑单位名称" clearable placeholder="请输入建筑单位名称" input-align="right" /> -->
+
+    <van-cell title="建筑单位名称" bind:click="openBuildingPikerControl" is-link value="{{buildingName}}" />
+
     <van-field value="{{ equipmentAdress }}" label="设备地址" clearable placeholder="请输入设备地址" input-align="right" />
-    <van-cell title="所属物业公司" bind:click="openCompanyPikerControl" is-link value="{{companyName}}" />
+    <!-- <van-cell title="所属物业公司" bind:click="openCompanyPikerControl" is-link value="{{companyName}}" /> -->
+    <van-field value="{{companyName}}" label="所属物业公司" readonly input-align="right" />
+
     <van-field value="{{equipmentNum}}" label="设备数量(台)" readonly input-align="right" />
     <van-cell title="保养类型" bind:click='openMaintainTypePikerControl' is-link value="{{maintainTypeLabel}}" />
 </van-cell-group>
 <view class="btn" hover-class="none" hover-stop-propagation="false">
-    <van-button type="primary" block>提交</van-button>
+    <van-button type="primary" block bindtap='addMaintainTask'>提交</van-button>
 </view>
 <!-- 时间选择器 -->
 <van-popup show="{{ beginTimePickerControl }}" position="bottom">
@@ -18,22 +24,9 @@
 <van-popup show="{{ endTimePickerControl }}" position="bottom">
     <van-datetime-picker type="date" value="{{ endTime }}" bind:input="onInput" min-date="{{ minDate }}" formatter="{{ formatter }}" bind:confirm='confirmEndTime' bind:cancel="closeEndTimePickerControl" />
 </van-popup>
-<!-- 物业公司选择器 -->
-<van-popup show="{{ companyPickerControl }}" bind:close="closeCompanyPikerControl" position="bottom" custom-style="max-height: 40%;">
-    <van-radio-group value="{{ companyId }}">
-        <van-cell-group>
-            <!-- <van-cell class="company-popup-title">
-                <van-button slot="title" type="default" size="normal">取消</van-button>
-                <van-button type="default" size="normal">确认</van-button>
-            </van-cell> -->
-            <van-cell wx:for='{{companyList}}' wx:for-item='companyItem' wx:key='{{companyItem.companyId}}' title="{{companyItem.companyName}}" clickable data-name="{{companyItem.companyId}}" data-label="{{companyItem.companyName}}" bind:click="clickCompanyId">
-                <!-- <van-radio slot="right-icon" name="1" /> -->
-                <van-radio use-icon-slot value="{{ companyItem.companyId }}" name="{{companyItem.companyId}}">
-                    <image class="radio-image" slot="icon" src="{{ companyId === companyItem.companyId ? radioIcon.active : radioIcon.normal}}" />
-                </van-radio>
-            </van-cell>
-        </van-cell-group>
-    </van-radio-group>
+<!-- 物业小区选择器 -->
+<van-popup show="{{ buildingPickerControl }}" position="bottom">
+    <van-picker show-toolbar bind:cancel="closeBuildingPikerControl" title="" columns="{{ buildingColumns }}" bind:confirm="confrimBuildingPickerData" />
 </van-popup>
 <!-- 保养类型选择器 -->
 <van-popup show="{{ maintainTypePickerControl }}" bind:close="closeMaintainTypePikerControl" position="bottom" custom-style="max-height: 40%;">

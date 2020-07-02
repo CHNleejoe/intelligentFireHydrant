@@ -1,0 +1,25 @@
+<!--logs.wxml-->
+<van-cell-group class="certify">
+    <van-cell class="user" title="{{userInfo.nickName}}" value="{{userStatus}}">
+        <image src='{{userInfo.avatarUrl}}' slot="icon" class="avatar">
+        </image>
+    </van-cell>
+    <van-field data-val="mobile" bind:change="fieldChange" type='tel' value="{{ info.mobile }}" center clearable label="联系方式" placeholder="请输入手机号" use-button-slot>
+        <van-button class="code-btn" slot="button" size="small" type="primary" bindtap='sendMobileCode'>发送验证码</van-button>
+    </van-field>
+    <van-field data-val="code" bind:change="fieldChange" input-align="right" label="验证码" value="{{ info.code }}" placeholder="输入验证码" />
+    <van-field data-val="name" bind:change="fieldChange" input-align="right" label="姓名" value="{{ info.name }}" placeholder="输入真实姓名" />
+
+    <van-cell title="公司类型" is-link value="{{companyType}}" arrow-direction="down" data-type="companyType" bindtap='showPicker' />
+    <van-cell title="所属公司" is-link value="{{company}}" arrow-direction="down" data-type="company" bindtap='showPicker' />
+</van-cell-group>
+<van-button type="primary" class="add" round hover-class="none" hover-stop-propagation="false" bindtap='submitUserinfo'>
+    确认
+</van-button>
+<!-- 选择器 -->
+<van-popup show="{{ companyTypeControl }}" position="bottom" data-type="companyType" bind:close="closePicker">
+    <van-picker show-toolbar data-type="companyType" bind:cancel="closePicker" bind:confirm="onConfirm" title="" columns="{{ companyTypeColumns }}" bind:confirm="confrimPickerData" />
+</van-popup>
+<van-popup show="{{ companyControl }}" position="bottom" data-type="company" bind:close="closePicker">
+    <van-picker show-toolbar data-type="company" bind:cancel="closePicker" bind:confirm="onConfirm" title="" columns="{{ companyColumns }}" bind:confirm="confrimPickerData" />
+</van-popup>

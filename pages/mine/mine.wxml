@@ -1,12 +1,16 @@
 <!--logs.wxml-->
 <van-cell-group class="mine">
-    <van-cell class="user" title="安琪拉" value="已认证">
-        <image src='../../statics/imgs/yujing.png' slot="icon" class="avatar">
-
+    <van-cell class="user" title="{{userInfo?userInfo.nickName:''}}" value="{{userStatus?userStatus:''}}" bindtap='bindTurnToCerity'>
+        <image wx:if='{{userInfo}}' src='{{userInfo.avatarUrl}}' slot="icon" class="avatar">
         </image>
+        <image wx:else src='../../statics/imgs/person.png' slot="icon" class="avatar">
+        </image>
+        <button wx:if="{{!userStatus}}" slot="right-icon" class='bottom' type='default' open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="handleOpenType">
+            授权登录
+        </button>
     </van-cell>
-    <van-cell title="姓名" value="李思思" />
-    <van-cell title="联系方式" value="13425566688" />
-    <van-cell title="账户类型" value="物业公司" />
-    <van-cell title="所属公司" value="华瀚控股物业有限公司" />
+    <van-cell title="姓名" value="{{userInfo.name}}" />
+    <van-cell title="联系方式" value="{{userInfo.mobile}}" />
+    <van-cell title="账户类型" value="{{userInfo.userType}}" />
+    <van-cell title="所属公司" value="{{userInfo.organName}}" />
 </van-cell-group>

@@ -1,4 +1,20 @@
-.mine{
+button:not([size='mini']){
+    width:auto;
+    min-height: auto;
+}
+.add{
+    button{
+        margin: auto;
+        transform: translateX(-50%);
+        position: absolute;
+        left: 50%;
+        margin-top: 60rpx;
+    }
+    .van-button__text{
+        width: 420rpx;
+    }
+}
+.certify{
     min-height: 100rpx;
     background: white;
     width: 100%;
@@ -20,12 +36,17 @@
             font-family:PingFang SC;
         }
         .bottom{
-            height: 80rpx;
+            height: 30rpx;
             width: 240rpx;
             position: absolute;
             top: 50%;
             right: 12rpx;
             transform: translateY(-50%);
+        }
+    }
+    .code-btn{
+        button{
+            width: 200rpx;
         }
     }
     .avatar{

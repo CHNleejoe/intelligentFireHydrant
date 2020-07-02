@@ -31,8 +31,11 @@
 .base .status.active {
   background: #0FC37C;
 }
-.base .status.warning {
+.base .status.stop {
   background: #FD545C;
+}
+.base .status.maintain {
+  background: #ffa136;
 }
 .detail {
   background: white;

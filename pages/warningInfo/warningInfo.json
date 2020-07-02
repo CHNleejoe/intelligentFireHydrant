@@ -1,6 +1,6 @@
 {
     "usingComponents": {},
-    "navigationBarTitleText": "设备详情",
+    "navigationBarTitleText": "预警信息",
     "enablePullDownRefresh": false,
     "onReachBottomDistance": 0,
     "backgroundTextStyle": "light",

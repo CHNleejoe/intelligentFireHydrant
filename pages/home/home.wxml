@@ -1,12 +1,12 @@
 <!--pages/home/home.wxml-->
-<view class="saoma" wx:if='{{userType == 1}}'>
-    <image src="../../statics/imgs/saoma.png">
+<view class="saoma" wx:if='{{userType == 1 || !userType}}'>
+    <image src="../../statics/imgs/saoma.png" bindtap='cameraQrCode'>
     </image>
     <text class="" selectable="false" space="false" decode="false">
     扫码查询参数
   </text>
 </view>
-<view class="map" wx:else hover-class="none" hover-stop-propagation="false">
+<view class="map" wx:if='{{userType == 2 || userType == 3}}' hover-class="none" hover-stop-propagation="false">
     <map name="homeMap" id="homeMap" longitude='{{mapData.longitude}}' latitude='{{mapData.latitude}}' scale='{{mapData.scale}}' markers="{{markers}}" show-location='true'></map>
     <view class="warning" hover-class="none" hover-stop-propagation="false">
         <view class="title" hover-class="none" hover-stop-propagation="false">
@@ -15,21 +15,68 @@
         <view class="list" hover-class="none" hover-stop-propagation="false">
             <view wx:for='{{markers}}' class="item {{index === markerIndex?'active':''}}" data-index="{{index}}" hover-class="none" bindtap='changeMarker' hover-stop-propagation="false">
                 <view class="time" hover-class="none" hover-stop-propagation="false">
-                    2020-01-22 12:22:33
+                    {{item.monitorTime}}
                 </view>
                 <view class="p" hover-class="none" hover-stop-propagation="false">
-                    预警名称:压力上下限告警
+                    详细地址:{{item.locationDetail}}
                 </view>
                 <view class="p" hover-class="none" hover-stop-propagation="false">
-                    预警名称:压力上下限告警
-                </view>
-                <view class="p" hover-class="none" hover-stop-propagation="false">
-                    预警名称:压力上下限告警
+                    SN码:{{item.snCode}}
                 </view>
                 <image class="" src="../../statics/imgs/tixing.png" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="">
 
                 </image>
+                <image class="selected" src="../../statics/imgs/selected.png" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="">
+
+                </image>
             </view>
         </view>
+    </view>
+</view>
+<view class='maintain' wx:if='{{userType == 4}}'>
+    <block wx:for='{{maintainInfo}}' wx:key='maintainId' wx:for-item='maintainItem'>
+        <view class='articles-container'>
+            <view class='info'>
+                <view class="p">
+                    <text class='created-at'>保养单位：{{maintainItem.organName?maintainItem.organName:''}}</text>
+                </view>
+                <view class="p">
+                    <text class='created-at'>建筑物地址：{{maintainItem.address?maintainItem.address:''}}</text>
+                </view>
+                <view class="p">
+                    <text class='created-at'>保养人：{{maintainItem.maintainPersons?maintainItem.maintainPersons:''}}</text>
+                </view>
+                <view class="p">
+                    <text class='created-at'>计划开始时间：{{maintainItem.beginPlaneTime?maintainItem.beginPlaneTime:''}}</text>
+                </view>
+                <view class="p">
+                    <text class='created-at'>计划结束时间：{{maintainItem.endPlaneTime?maintainItem.endPlaneTime:''}}</text>
+                </view>
+                <view class="p">
+                    <text class='created-at'>开始时间：{{maintainItem.beginTime?maintainItem.beginTime:''}}</text>
+                </view>
+                <view class="p">
+                    <text class='created-at'>结束时间：{{maintainItem.endTime?maintainItem.endTime:''}}</text>
+                </view>
+                <view class="p">
+                    <text class='created-at'>设备数量：{{maintainItem.deviceNo?maintainItem.deviceNo:0}}</text>
+                </view>
+                <view class="p">
+                    <text class='created-at'>已保养数量：{{maintainItem.alrMaintainDeviceNo?maintainItem.alrMaintainDeviceNo:0}}</text>
+                </view>
+            </view>
+            <view class="btn" data-item="{{maintainItem}}" bindtap="bindTurnMaintainDetail">
+                {{maintainItem.status==2?'查看详情':'去保养'}}
+            </view>
+            <view class="status {{maintainItem.status_class}}" hover-class="none" hover-stop-propagation="false">
+                {{maintainItem.status_label}}
+            </view>
+        </view>
+    </block>
+    <van-button type="info" class="add" round hover-class="none" hover-stop-propagation="false" bindtap='turnToAddMaintainTask'>
+        新增保养任务
+    </van-button>
+    <view class='data-loading' hidden='{{hidden}}'>
+        数据加载中...
     </view>
 </view>

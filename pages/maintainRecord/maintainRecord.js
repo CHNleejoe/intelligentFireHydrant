@@ -1,3 +1,7 @@
+var util = require('../../utils/util.js');
+var api = require('../../net/api.js');
+var http = require('../../net/http.js');
+const app = getApp()
 Page({
 
     data: {

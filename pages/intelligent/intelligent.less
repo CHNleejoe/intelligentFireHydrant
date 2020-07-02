@@ -31,7 +31,11 @@
         font-size:32rpx;
         font-family:PingFang SC;
         color:rgba(48,145,242,1);
-        
+        transition: all .3s;
+        &:active{
+          opacity: .8;
+          background: #eee;
+        }
     }
     .status{
         width: 120rpx;
@@ -46,10 +50,13 @@
         right: 0;
         top: 13rpx;
         &.active{
-            background: #0FC37C;
+          background: #0FC37C;
         }
-        &.warning{
+        &.stop{
             background: #FD545C;
+        }
+        &.maintain{
+            background: #ffa136;
         }
     }
   }  

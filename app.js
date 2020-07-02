@@ -1,23 +1,23 @@
 //app.js
+
 App({
-    data: {
-        userType: 2
-    },
+    data: {},
     onLaunch: function() {
+        var util = require('utils/util.js')
+
         // 展示本地存储能力
         var logs = wx.getStorageSync('logs') || []
         logs.unshift(Date.now())
         wx.setStorageSync('logs', logs)
+        util.loadDictionary('organ_type', this)
+        util.loadDictionary('maintain_status', this)
 
-        // 登录
-        wx.login({
-                success: res => {
-                    // 发送 res.code 到后台换取 openId, sessionKey, unionId
-                }
-            })
-            // 获取用户信息
+        const that = this;
+
         wx.getSetting({
             success: res => {
+                console.log(res)
+
                 if (res.authSetting['scope.userInfo']) {
                     // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
                     wx.getUserInfo({
@@ -32,16 +32,87 @@ App({
                             }
                         }
                     })
+                    return
+                    wx.login({
+                        success: function(r) {
+                            console.log(r, 'getUserInfo')
+
+                            var code = r.code; //登录凭证
+                            if (code) {
+                                //2、调用获取用户信息接口
+                                that.getUserOpenId(code)
+                            } else {
+                                console.log('获取用户登录态失败！' + r.errMsg)
+                            }
+                        },
+                        fail: function() {
+                            callback(false)
+                        }
+                    })
                 }
             }
         })
     },
+    /**
+     * 获取用户的openid
+     */
+    getUserOpenId(js_code = this.data.js_code) {
+        var api = require('./net/api.js');
+        var http = require('./net/http.js');
+        const that = this
+        var url = api.openId;
+        http.get(url, {
+            jsCode: js_code
+        }, (res) => {
+            console.log(res, 'getUserOpenId')
+
+            that.globalData.openId = res.b.openId
+            that.getUserInfoByOpenIdFromBackend(res.b.openId)
+        }, function() {})
+    },
+    /**
+     * 获取用户后台信息
+     */
+    getUserInfoByOpenIdFromBackend(openId) {
+        var api = require('./net/api.js');
+        var http = require('./net/http.js');
+        var util = require('utils/util.js')
+
+        const that = this
+        var url = api.userInfoByOpenidFromBackend
+        http.post(url, {
+            wechatOpenId: openId
+        }, (res) => {
+            if (res.b.userInfo) {
+                var userType = util.parseDictionary(that, 'organ_type', res.b.userInfo ? res.b.userInfo.userType : '')
+
+                var userBaseInfo = {
+                    ...that.globalData.userInfo,
+                    ...res.b.userInfo
+                }
+                userBaseInfo.userType = userType
+                that.globalData.userInfo = userBaseInfo
+            }
+            that.globalData.userStatus = res.b.certificationStatus
+            that.globalData.userType = res.b.userInfo ? res.b.userInfo.userType : null
+            that.globalData.proprietorList = res.b.proprietorList
+
+        }, function() {})
+    },
     globalData: {
         userInfo: null,
-        requestLocation: 'http://192.168.3.21:8080/fhms-saas',
-        // requestLocation: 'https://mbti.app.misterling.cn',
-        appId: 'wx00303969c3fd5e29',
+        proprietorList: null,
+        userType: null,
+        userStatus: null,
+
+        requestLocation: 'http://192.168.3.21:8080/fhms-saas/api/app/v1',
+        // requestLocation: 'http://192.168.3.171:8282/fhms-saas/api/app/v1',
+        version: 'v1',
         openId: '',
+        dictionarys: {},
+
+        timer: null
+
     },
     /**
      * 用户分享自定义

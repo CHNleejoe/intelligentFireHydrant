@@ -1,14 +1,18 @@
 // pages/equipmentDetail/equipmentDetail.js
 import * as echarts from '../../ec-canvas/echarts';
-var chartLine = null;
 var util = require('../../utils/util.js');
+var api = require('../../net/api.js');
+var http = require('../../net/http.js');
+var dayjs = require('../../utils/dayjs.min.js');
+const app = getApp();
+var chartLine = null;
 
 function getOption(xData, data_cur, data_his) {
     var option = {
         backgroundColor: "#fff",
         color: ["#37A2DA", "#f2960d", "#67E0E3", "#9FE6B8"],
         title: {
-            text: '实时运行速度',
+            text: '',
             textStyle: {
                 fontWeight: '500',
                 fontSize: 15,
@@ -18,7 +22,7 @@ function getOption(xData, data_cur, data_his) {
             y: '0'
         },
         legend: {
-            data: ['今日', '昨日'],
+            data: ['检测线'],
             right: 10
         },
         grid: {
@@ -37,10 +41,6 @@ function getOption(xData, data_cur, data_his) {
             boundaryGap: false,
             data: xData || [],
             axisLabel: {
-                interval: 11,
-                formatter: function(value, index) {
-                    return value.substring(0, 2) * 1;
-                },
                 textStyle: {
                     fontsize: '10px'
                 }
@@ -48,38 +48,50 @@ function getOption(xData, data_cur, data_his) {
         },
         yAxis: {
             x: 'center',
-            name: 'km/h',
+            name: 'Mpa',
             type: 'value',
-            min: 0,
-            max: 120
+
         },
         series: [{
-            name: '今日',
-            zIndex: 2,
-            type: 'line',
-            smooth: true,
-            symbolSize: 0,
-            data: data_cur || [],
-            markLine: {
-                data: [{
-                    name: 'Y 轴值为 100 的水平线',
-                    yAxis: 10
-                }, ]
+                name: '检测线',
+                zIndex: 2,
+                type: 'line',
+                smooth: true,
+                symbolSize: 0,
+                data: data_cur || [],
+                markLine: {
+                    data: [{
+                            name: 'Y 轴值为 100 的水平线',
+                            yAxis: 10,
+                            lineStyle: {
+                                color: '#37A2DA'
+                            }
+                        },
+                        {
+                            name: 'Y 轴值为 100 的水平线',
+                            yAxis: 90,
+                            lineStyle: {
+                                color: '#f2960d'
+                            }
+                        }
+                    ]
+                }
             }
-        }, {
-            name: '昨日',
-            zIndex: 1,
-            type: 'line',
-            smooth: true,
-            symbolSize: 0,
-            data: data_his || [],
-            markLine: {
-                data: [{
-                    name: 'Y 轴值为 100 的水平线',
-                    yAxis: 90
-                }, ]
-            }
-        }]
+            // , {
+            //     name: '昨日',
+            //     zIndex: 1,
+            //     type: 'line',
+            //     smooth: true,
+            //     symbolSize: 0,
+            //     data: data_his || [],
+            //     markLine: {
+            //         data: [{
+            //             name: 'Y 轴值为 100 的水平线',
+            //             yAxis: 90
+            //         }]
+            //     }
+            // }
+        ]
     };
     return option;
 }
@@ -106,12 +118,14 @@ Page({
      */
     data: {
         active: 0,
-
+        options: {},
         time: new Date(),
 
         ecLine: {
             onInit: initChart
-        }
+        },
+        detailData: {},
+        warningData: {}
     },
 
     /**
@@ -120,21 +134,28 @@ Page({
      */
 
     onClick(event) {
-        console.log(event.detail)
-        wx.showToast({
-            title: `点击标签 ${event.detail.title}`,
-            icon: 'none',
-        });
+        console.log(event)
+        if (event.detail.index == 1) {
+            this.loadWarningData()
+        }
     },
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
+        options.deviceInfo = JSON.parse(options.deviceInfo)
+        options.deviceInfo.status_lable = util.parseDictionary(app, 'device_status', options.deviceInfo.status)
+        const that = this;
         var time = util.formatTimeWithoutHMS(new Date());
         // 再通过setData更改Page()里面的data，动态更新页面的数据
+
         this.setData({
-            time: time
+            time: time,
+            options: options
         });
+
+        that.loadWatchData(options)
+
     },
 
     /**
@@ -155,6 +176,10 @@ Page({
         that.setData({
             time: time
         });
+        app.globalData.timer && clearTimeout(app.globalData.timer)
+        app.globalData.timer = setTimeout(function() {
+            that.loadWatchData()
+        }, 300)
     },
 
     /**
@@ -166,75 +191,103 @@ Page({
         // 三个参数： x轴数据，第一条线数据，第二条数据。 随意，echarts就跟正常用随便写就行
         // 随便写几个假数据
         // /*
-        var xData = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
-        var data_cur = [55, 67, 66, 78, 55, 67, 66, 78, 55, 67, 66, 78, 55, 67, 66, 78, 55, 67, 66, 78, 65, 66, 65, 54];
-        var data_his = [67, 66, 78, 65, 66, 65, 54, 67, 66, 78, 65, 66, 65, 54, 67, 66, 78, 65, 66, 65, 54, 67, 66, 78];
-        // 方法一：
-        // var option = getOption(xData, data_cur, data_his);
-        // chartLine.setOption(option);
-        // 方法二：
-        //如果上面初始化时候，已经chartLine已经setOption了，
-        //那么建议不要重新setOption，官方推荐写法，重新赋数据即可。
-        console.error(this.data.active)
-        setTimeout(function() {
-                console.error(chartLine)
-
-                chartLine.setOption({
-                    xAxis: {
-                        data: xData
-                    },
-                    series: [{
-                        data: data_cur
-                    }, {
-                        data: data_his
-                    }]
-                });
-            }, 10)
-            // */
+        // var xData = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+        // var data_cur = [55, 67, 66, 78, 55, 67, 66, 78, 55, 67, 66, 78, 55, 67, 66, 78, 55, 67, 66, 78, 65, 66, 65, 54];
+        // var data_his = [67, 66, 78, 65, 66, 65, 54, 67, 66, 78, 65, 66, 65, 54, 67, 66, 78, 65, 66, 65, 54, 67, 66, 78];
+        // // 方法一：
+        // // var option = getOption(xData, data_cur, data_his);
+        // // chartLine.setOption(option);
+        // // 方法二：
+        // //如果上面初始化时候，已经chartLine已经setOption了，
+        // //那么建议不要重新setOption，官方推荐写法，重新赋数据即可。
+        // setTimeout(function() {
+        //         chartLine.setOption({
+        //             xAxis: {
+        //                 data: xData
+        //             },
+        //             series: [{
+        //                 data: data_cur
+        //             }]
+        //         });
+        //     }, 100)
+        // */
     },
-
-    /**
-     * 生命周期函数--监听页面显示
-     */
-    onShow: function() {
-
-
+    loadWatchData(options = null, ) {
+        const that = this;
+        console.log(that.data.time, 12)
+        var url = api.intelligentWarningDetailByDeviceId;
+        let deviceId = that.data.options.deviceInfo ? that.data.options.deviceInfo.deviceId : options.deviceInfo.deviceId,
+            monitorBeginTime = that.data.time,
+            monitorEndTime = that.data.time;
+        http.get(url, {
+            deviceId,
+            monitorBeginTime,
+            monitorEndTime,
+            pageNo: 1,
+            pageSize: 30
+        }, res => {
+            console.log('intelligentWarningDetailByDeviceId', res)
+            that.setData({
+                detailData: res.b
+            })
+            var xData = [],
+                yData = [],
+                maxLineVal = res.b.deviceUpperLimit,
+                minLineVal = res.b.deviceLowerLimit;
+            res.b.data && res.b.data.list.map(item => {
+                xData.push(dayjs(item.monitorTime).format('hh:mm:ss'));
+                yData.push(parseFloat(item.detail[0].value));
+            })
+            console.log(xData, yData)
+            chartLine.setOption({
+                xAxis: {
+                    data: xData
+                },
+                yAxis: {
+                    max: maxLineVal,
+                    min: 0
+                },
+                series: [{
+                    data: yData,
+                    markLine: {
+                        data: [{
+                                name: 'Y 轴值为 100 的水平线',
+                                yAxis: minLineVal,
+                                lineStyle: {
+                                    color: '#37A2DA'
+                                }
+                            },
+                            {
+                                name: 'Y 轴值为 100 的水平线',
+                                yAxis: maxLineVal,
+                                lineStyle: {
+                                    color: '#f2960d'
+                                }
+                            }
+                        ]
+                    }
+                }]
+            });
+        })
     },
+    loadWarningData() {
+        const that = this;
+        var url = api.intelligentWarningListByDeviceId;
+        let deviceId = that.data.options.deviceInfo ? that.data.options.deviceInfo.deviceId : options.deviceInfo.deviceId,
+            monitorBeginTime = that.data.time,
+            monitorEndTime = that.data.time;
 
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload: function() {
-
-    },
-
-    /**
-     * 页面相关事件处理函数--监听用户下拉动作
-     */
-    onPullDownRefresh: function() {
-
-    },
-
-    /**
-     * 页面上拉触底事件的处理函数
-     */
-    onReachBottom: function() {
-
-    },
-
-    /**
-     * 用户点击右上角分享
-     */
-    onShareAppMessage: function() {
-
-    },
-
-
+        http.get(url, {
+            deviceId,
+            monitorBeginTime,
+            monitorEndTime,
+            pageNo: 1,
+            pageSize: 30
+        }, res => {
+            console.log('intelligentWarningListByDeviceId', res)
+            that.setData({
+                warningData: res.b
+            })
+        })
+    }
 })

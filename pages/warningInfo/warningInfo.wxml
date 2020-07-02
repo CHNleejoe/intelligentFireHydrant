@@ -1,0 +1,28 @@
+<!--pages/warningInfo/warningInfo.wxml-->
+<view class="map" hover-class="none" hover-stop-propagation="false">
+    <map name="homeMap" id="homeMap" longitude='{{mapData.longitude}}' latitude='{{mapData.latitude}}' scale='{{mapData.scale}}' markers="{{markers}}" show-location='true'></map>
+    <view class="warning" hover-class="none" hover-stop-propagation="false">
+        <view class="title" hover-class="none" hover-stop-propagation="false">
+            实时预警
+        </view>
+        <view class="list" hover-class="none" hover-stop-propagation="false">
+            <view wx:for='{{markers}}' class="item {{index === markerIndex?'active':''}}" data-index="{{index}}" hover-class="none" bindtap='changeMarker' hover-stop-propagation="false">
+                <view class="time" hover-class="none" hover-stop-propagation="false">
+                    {{item.monitorTime}}
+                </view>
+                <view class="p" hover-class="none" hover-stop-propagation="false">
+                    详细地址:{{item.locationDetail}}
+                </view>
+                <view class="p" hover-class="none" hover-stop-propagation="false">
+                    SN码:{{item.snCode}}
+                </view>
+                <image class="" src="../../statics/imgs/tixing.png" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="">
+
+                </image>
+                <image class="selected" src="../../statics/imgs/selected.png" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="">
+
+                </image>
+            </view>
+        </view>
+    </view>
+</view>

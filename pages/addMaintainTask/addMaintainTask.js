@@ -1,17 +1,24 @@
 // pages/addMaintainTask/addMaintainTask.js
 var util = require('../../utils/util.js');
+var api = require('../../net/api.js');
+var http = require('../../net/http.js');
+var dayjs = require('../../utils/dayjs.min.js');
+const app = getApp();
+
 Page({
 
     /**
      * 页面的初始数据
      */
     data: {
-        planBeginDate: '2020-1-1',
+        planBeginDate: '2020-4-1',
         planEndDate: '2020-4-1',
-        buildingName: '',
+        buildingName: '请选择物业小区',
+        buildingId: '',
         equipmentAdress: '',
         equipmentNum: 12,
-
+        userInfo: app.globalData.userInfo,
+        options: {},
         // 时间选择器
         beginTimePickerControl: false,
         beginTime: new Date().getTime(),
@@ -32,23 +39,16 @@ Page({
             active: '../../statics/imgs/ok.png',
         },
         // 公司选择器
-        companyId: '1',
-        companyName: '请选择物业公司',
-        companyPickerControl: false,
-        companyList: [{
-            companyName: '物业公司',
-            companyId: '1'
-        }, {
-            companyName: '维修公司',
-            companyId: '2'
-        }, {
-            companyName: '业主公司',
-            companyId: '3'
-        }, ],
+        companyId: '',
+        companyName: '',
+        buildingPickerControl: false,
+        buildingColumns: [],
+        buildingIdColumns: [],
+        buildingOrganList: [],
 
         // 保养类型选择器
         maintainTypeLabel: '请选择保养类型',
-        maintainTypeId: '1',
+        maintainTypeId: '',
         maintainTypePickerControl: false,
         maintainTypeList: [{
             maintainTypeLabel: '基本保养',
@@ -62,6 +62,26 @@ Page({
         }, ],
 
     },
+    /**
+     * 生命周期函数--监听页面加载
+     */
+    onLoad: function(options) {
+        var planBeginDate = util.formatTimeWithoutHMS(new Date()),
+            planEndDate = util.formatTimeWithoutHMS(new Date());
+        options.buildingInfo = JSON.parse(options.buildingInfo)
+        console.log(app.globalData.userInfo, options)
+        this.setData({
+            planBeginDate,
+            planEndDate,
+            userInfo: app.globalData.userInfo,
+
+            options: options,
+            equipmentNum: options.buildingInfo.traditionalDeviceNo,
+
+        })
+        this.loadMaintainType()
+    },
+
     /**
      * 时间选择器控制函数
      * @param {*} options 
@@ -98,12 +118,57 @@ Page({
      * 选择物业公司
      * @param {*} options 
      */
-    openCompanyPikerControl() {
-        this.setData({ companyPickerControl: true });
+    openBuildingPikerControl() {
+        const that = this;
+        const url = api.proprietorList
+
+        http.get(url, {}, res => {
+            var cols = [],
+                cols_id = [],
+                oragn_list = []
+            res.b.data.map(item => {
+                cols.push(item.proprietorName)
+                cols_id.push(item.proprietorId)
+                oragn_list.push(item.organList)
+
+            })
+            that.setData({
+                buildingColumns: cols,
+                buildingIdColumns: cols_id,
+                buildingOrganList: oragn_list,
+                buildingPickerControl: true
+            })
+        })
     },
-    closeCompanyPikerControl() {
-        this.setData({ companyPickerControl: false });
+    confrimBuildingPickerData(event) {
+        let type = event.currentTarget.dataset.type
+        const { picker, value, index } = event.detail;
+        const that = this;
+        var companyName = '',
+            companyId = '';
+
+        that.data.buildingOrganList[index].map(item => {
+            if (app.globalData.userType == item.organType) {
+                companyName = item.organName
+                companyId = item.organId
+            }
+        })
+        this.setData({
+            buildingPickerControl: false,
+            buildingName: value,
+            buildingId: that.data.buildingIdColumns[index],
+            companyName,
+            companyId
+        })
+
     },
+    closeBuildingPikerControl() {
+        this.setData({ buildingPickerControl: false });
+    },
+    /**
+     * 选择对应的公司
+     * @param {x} event 事件对象
+     */
     clickCompanyId(event) {
         const { name, label } = event.currentTarget.dataset;
         this.setData({
@@ -128,60 +193,61 @@ Page({
             maintainTypeLabel: label
         });
     },
-
     /**
-     * 生命周期函数--监听页面加载
+     * 新增保养任务
      */
-    onLoad: function(options) {
-
+    addMaintainTask() {
+        const that = this;
+        if (dayjs(that.data.planBeginDate).valueOf() > dayjs(that.data.planEndDate).valueOf()) {
+            wx.showToast({
+                title: '开始时间不能大于结束时间',
+                icon: 'none',
+            });
+            return
+        } else if (that.data.maintainTypeId == '') {
+            wx.showToast({
+                title: '保养类型不能为空',
+                icon: 'none',
+            });
+            return
+        }
+        var url = api.addMaintainTask
+        http.post(url, {
+            proprietorId: that.data.buildingId,
+            beginPlaneTime: that.data.planBeginDate,
+            endPlaneTime: that.data.planEndDate,
+            mainOrgId: that.data.companyId,
+            mainTypeId: that.data.maintainTypeId,
+            // remark: that.data.remark
+        }, res => {
+            wx.showToast({
+                title: '任务新增成功',
+                icon: 'success',
+            });
+            setTimeout(function() {
+                wx.navigateBack()
+            }, 1000)
+        })
     },
 
     /**
-     * 生命周期函数--监听页面初次渲染完成
+     * 
      */
-    onReady: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面显示
-     */
-    onShow: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload: function() {
-
-    },
-
-    /**
-     * 页面相关事件处理函数--监听用户下拉动作
-     */
-    onPullDownRefresh: function() {
-
-    },
-
-    /**
-     * 页面上拉触底事件的处理函数
-     */
-    onReachBottom: function() {
-
-    },
-
-    /**
-     * 用户点击右上角分享
-     */
-    onShareAppMessage: function() {
-
+    loadMaintainType() {
+        const that = this;
+        var url = api.maintainType
+        http.get(url, {}, res => {
+            var maintainList = []
+            console.log(res)
+            res.b.map(item => {
+                maintainList.push({
+                    maintainTypeLabel: item.typeName,
+                    maintainTypeId: item.typeId,
+                })
+            })
+            that.setData({
+                maintainTypeList: maintainList
+            })
+        })
     }
 })

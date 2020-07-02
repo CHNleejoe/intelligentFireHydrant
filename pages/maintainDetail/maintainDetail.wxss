@@ -15,6 +15,15 @@
   margin-bottom: 20rpx;
   position: relative;
 }
+.base .p.flex {
+  display: flex;
+  justify-content: space-between;
+}
+.base .p.flex > text {
+  flex: 1;
+  height: 60rpx;
+  line-height: 20rpx;
+}
 .base .status {
   width: 120rpx;
   height: 60rpx;
@@ -80,6 +89,13 @@
 .detail .detail-item .info .p {
   box-sizing: border-box;
   padding-right: 30rpx;
+}
+.detail .detail-item .info .p.flex {
+  display: flex;
+  justify-content: space-between;
+}
+.detail .detail-item .info .p.flex > text {
+  flex: 1;
 }
 .detail .detail-item .info .p-detial {
   display: flex;

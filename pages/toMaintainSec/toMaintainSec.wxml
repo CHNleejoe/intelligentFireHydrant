@@ -1,23 +1,23 @@
 <!--pages/toMaintainSec/toMaintainSec.wxml-->
 <van-cell-group>
-    <van-cell title="设备编码" value="{{equipmentCode}}" />
-    <van-cell title="设备地址" value="{{equipmentAdress}}" />
+    <van-cell title="设备编码" value="{{deviceInfo.snCode}}" />
+    <van-cell title="设备地址" value="{{deviceInfo.address}}" />
     <view class="check-radio" hover-class="none" hover-stop-propagation="false">
         <view class="title" hover-class="none" hover-stop-propagation="false">
             保养结果登记
         </view>
-        <view wx:for='{{radioList}}' wx:for-item='radioItem' class="radio-item" hover-class="none" hover-stop-propagation="false">
+        <view wx:for='{{deviceInfo.maintainSituation}}' wx:for-item='radioItem' class="radio-item" hover-class="none" hover-stop-propagation="false">
             <view class="radio-label" hover-class="none" hover-stop-propagation="false">
-                {{index + 1}}.{{radioItem.radioLabel}}
+                {{index + 1}}.{{radioItem.contentName}}
             </view>
-            <van-radio-group data-index="{{index}}" class="radio-group" value="{{ radioItem.radioResult }}" bind:change="setRadioVal">
+            <van-radio-group data-index="{{index}}" class="radio-group" value="{{ radioItem.result }}" bind:change="setRadioVal">
                 <van-radio name="1" icon-size='18'>合格</van-radio>
-                <van-radio name="2" icon-size='18'>不合格</van-radio>
+                <van-radio name="0" icon-size='18'>不合格</van-radio>
             </van-radio-group>
         </view>
     </view>
-    <van-uploader class="camera" file-list="{{ fileList }}" bind:after-read="afterRead" />
+    <van-uploader class="camera" file-list="{{ fileList }}" bind:after-read="afterRead" bind:delete='afterDelete' />
 </van-cell-group>
 <view class="btn" hover-class="none" hover-stop-propagation="false">
-    <van-button type="primary" block>提交</van-button>
+    <van-button type="primary" block bindtap='uploadMaintainTaskInfo'>提交</van-button>
 </view>

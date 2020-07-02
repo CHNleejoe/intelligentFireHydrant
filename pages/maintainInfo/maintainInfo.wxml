@@ -1,22 +1,38 @@
 <!--pages/maintainInfo/maintainInfo.wxml-->
 <view class='view-container'>
-    <block wx:for='{{articles}}' wx:key='{{item.id}}'>
+    <block wx:for='{{listData}}' wx:key='{{item.id}}'>
         <view class='articles-container'>
             <view class='info'>
                 <view class="p" hover-class="none" hover-stop-propagation="false">
-                    <text class='created-at'>{{item.nickname}}</text> :
-                    <text class='category'>{{item.category}}</text>
+                    <text class='created-at'>保养开始时间：{{item.beginTime}}</text>
                 </view>
                 <view class="p" hover-class="none" hover-stop-propagation="false">
-                    <text class='created-at'>{{item.created_at}}</text> :
-                    <text class='category'>{{item.category}}</text>
+                    <text class='created-at'>保养结束时间：{{item.endTime}}</text>
+                </view>
+                <view class="p" hover-class="none" hover-stop-propagation="false">
+                    <text class='created-at'>保养计划开始时间：{{item.beginPlaneTime}}</text>
+                </view>
+                <view class="p" hover-class="none" hover-stop-propagation="false">
+                    <text class='created-at'>保养计划结束时间：{{item.endPlaneTime}}</text>
+                </view>
+                <view class="p" hover-class="none" hover-stop-propagation="false">
+                    <text class='created-at'>维修部门：{{item.organName}}</text>
+                </view>
+                <view class="p" hover-class="none" hover-stop-propagation="false">
+                    <text class='created-at'>保养人：{{item.maintainPersons}}</text>
+                </view>
+                <view class="p" hover-class="none" hover-stop-propagation="false">
+                    <text class='created-at'>设备数量：{{item.deviceNo}}</text>
+                </view>
+                <view class="p" hover-class="none" hover-stop-propagation="false">
+                    <text class='created-at'>地址：{{item.address}}</text>
                 </view>
             </view>
             <view class="btn" data-item="{{item}}" bindtap="bindTurnDetail" hover-class="none" hover-stop-propagation="false">
                 查看详情
             </view>
-            <!-- <view class="status {{index%3 == 1?'active':'warning'}}" hover-class="none" hover-stop-propagation="false">
-                {{index%3 == 1?'启用中':'预警中'}}
+            <!-- <view class="status {{item.status == 2?'active':'warning'}}" hover-class="none" hover-stop-propagation="false">
+                {{item.status_label}}
             </view> -->
         </view>
     </block>

@@ -1,12 +1,12 @@
 <!--pages/function/function.wxml-->
 <view class="building-list" hover-class="none" hover-stop-propagation="false">
     <van-collapse value="{{ activeName }}" bind:change="onChange" accordion>
-        <van-collapse-item class="building-info" title="{{buildingItem.name}}" name="{{index}}" wx:for="{{buildingList}}" wx:for-item="buildingItem"  wx:key="{{index}}" >
-            <view class="building-info-item" hover-class="none" hover-stop-propagation="false" wx:for="{{buildingItem.oragneList}}" wx:key="{{oragneListItem.id}}" wx:for-item="oragneListItem">
+        <van-collapse-item class="building-info" title="{{buildingItem.proprietorName}}" name="{{index}}" wx:for="{{buildingList}}" wx:for-item="buildingItem" wx:key="index">
+            <view class="building-info-item" hover-class="none" hover-stop-propagation="false" wx:for="{{buildingItem.organData}}" wx:key="id" wx:for-item="oragneListItem">
                 {{oragneListItem.name}}:{{oragneListItem.value}}
             </view>
             <view class="building-btns" hover-class="none" hover-stop-propagation="false">
-                <view class="building-btns-item" hover-class="none" hover-stop-propagation="false" wx:for="{{buildingBtns}}" wx:key="{{item.btn_id}}" >
+                <view class="building-btns-item" hover-class="none" hover-stop-propagation="false" wx:for="{{buildingBtns}}" wx:key="btn_id" data-buildingId="{{buildingItem.proprietorId}}" data-functionType="{{item.btn_id}}" bindtap='clickDetailFunc'>
                     <image class="" src="{{item.icon}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="">
                     </image>
                     <view wx:if="{{item.data}}" class="building-btns-item-bedge {{item.data?item.data.type:''}}" hover-class="none" hover-stop-propagation="false">

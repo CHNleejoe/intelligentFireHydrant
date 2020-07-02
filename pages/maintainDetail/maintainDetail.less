@@ -15,6 +15,17 @@
     line-height:60rpx;
     margin-bottom: 20rpx;
     position: relative;
+    .p{
+        &.flex{
+            display: flex;
+            justify-content: space-between;
+            >text{
+                flex: 1;
+                height: 60rpx;
+                line-height: 20rpx;
+            }
+        }
+    }
     .status{
         width: 120rpx;
         height: 60rpx;
@@ -79,6 +90,13 @@
             .p{
                 box-sizing: border-box;
                 padding-right: 30rpx;
+                &.flex{
+                    display: flex;
+                    justify-content: space-between;
+                    >text{
+                        flex: 1;
+                    }
+                }
             }
             .p-detial{
                 display: flex;

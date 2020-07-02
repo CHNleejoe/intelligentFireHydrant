@@ -3,16 +3,33 @@
 </view>
 <view class="base" hover-class="none" hover-stop-propagation="false">
     <view class="p" hover-class="none" hover-stop-propagation="false">
-        SN码：X502PX
+        保养开始时间：{{detailInfo.beginTime}}
     </view>
     <view class="p" hover-class="none" hover-stop-propagation="false">
-        SN码：X502PX
+        保养结束时间：{{detailInfo.endTime}}
     </view>
     <view class="p" hover-class="none" hover-stop-propagation="false">
-        SN码：X502PX
+        保养计划开始时间：{{detailInfo.beginPlaneTime}}
     </view>
     <view class="p" hover-class="none" hover-stop-propagation="false">
-        S SN码：X502PX 当前参数值：2.1pa 参数采集时间：2020-04-20 设备地址：
+        保养计划结束时间：{{detailInfo.endPlaneTime}}
+    </view>
+    <view class="p" hover-class="none" hover-stop-propagation="false">
+        维修部门：{{detailInfo.organName}}
+    </view>
+    <view class="p flex" hover-class="none" hover-stop-propagation="false">
+        <text>
+            保养人：{{detailInfo.maintainPersons}}
+        </text>
+        <text>
+            设备数量：{{detailInfo.deviceNo}}
+        </text>
+    </view>
+    <view class="p" hover-class="none" hover-stop-propagation="false">
+        地址：{{detailInfo.address}}
+    </view>
+    <view class="p" hover-class="none" hover-stop-propagation="false">
+        备注：{{detailInfo.remark?detailInfo.remark:''}}
     </view>
     <!-- <view class="status active" hover-class="none" hover-stop-propagation="false">
         启用中
@@ -22,32 +39,29 @@
     <view class="title" hover-class="none" hover-stop-propagation="false">
         保养信息
     </view>
-    <view class="detail-item" wx:for="{{3}}" wx:key='{{index}}' wx:for-item="detailItem" hover-class="none" hover-stop-propagation="false">
+    <view class="detail-item" wx:for="{{detailInfo.maintainDeviceList}}" wx:key='index' wx:for-item="detailItem" hover-class="none" hover-stop-propagation="false">
         <view class="images" hover-class="none" hover-stop-propagation="false">
-            <image wx:for='{{imgs}}' wx:for-item='imageItem' wx:key='{{index}}' data-detailItem="{{detailItem}}" data-current="{{imageItem}}" bindtap='previewImages' class="images-item" src="{{imageItem}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror=""
-                bindload="">
+            <image wx:for='{{detailItem.maintainPhotosList}}' wx:for-item='imageItem' wx:key='index' data-detailitem="{{detailItem}}" data-current="{{imageItem}}" bindtap='previewImages' class="images-item" src="{{imageItem}}" mode="aspectFit|aspectFill|widthFix"
+                lazy-load="false" binderror="" bindload="">
             </image>
         </view>
         <view class="info" hover-class="none" hover-stop-propagation="false">
             <view class="p">
-                维护公司：<text class="color"></text>
+                维护公司：<text class="color">{{detailInfo.organName}}</text>
             </view>
             <view class="p">
-                维护人员：<text class="color">1231231231212312312312</text>
+                维护人员：<text class="color">{{detailItem.persons}}</text>
             </view>
             <view class="p">
-                维护时间：<text class="color">asds</text>
+                维护时间：<text class="color">{{detailItem.maintainTime}}</text>
             </view>
             <view class="p">
                 维护项目：
-                <view class="p-detial color" wx:for='{{3}}' wx:key='{{index}}'>
-                    <view>管道维修:</view>
-                    <view class="right">不合格</view>
+                <view class="p-detial color" wx:for='{{detailItem.maintainSituation}}' wx:key='index' wx:for-item='maintainItem'>
+                    <view>{{maintainItem.contentName}}:</view>
+                    <view class="right">{{maintainItem.result == 0? '不合格':''}}{{maintainItem.result == 1? '合格':''}}</view>
                 </view>
             </view>
         </view>
-    </view>
-    <view class='data-loading' hidden='{{hidden}}'>
-        数据加载中...
     </view>
 </view>

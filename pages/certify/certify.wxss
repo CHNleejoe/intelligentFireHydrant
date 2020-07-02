@@ -1,12 +1,26 @@
-.mine {
+button:not([size='mini']) {
+  width: auto;
+  min-height: auto;
+}
+.add button {
+  margin: auto;
+  transform: translateX(-50%);
+  position: absolute;
+  left: 50%;
+  margin-top: 60rpx;
+}
+.add .van-button__text {
+  width: 420rpx;
+}
+.certify {
   min-height: 100rpx;
   background: white;
   width: 100%;
 }
-.mine .user {
+.certify .user {
   position: relative;
 }
-.mine .user .van-cell__title {
+.certify .user .van-cell__title {
   display: flex;
   align-items: center;
   text-indent: 21rpx;
@@ -14,22 +28,25 @@
   font-family: PingFang SC;
   color: #333333;
 }
-.mine .user .van-cell__value {
+.certify .user .van-cell__value {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   font-size: 32rpx;
   font-family: PingFang SC;
 }
-.mine .user .bottom {
-  height: 80rpx;
+.certify .user .bottom {
+  height: 30rpx;
   width: 240rpx;
   position: absolute;
   top: 50%;
   right: 12rpx;
   transform: translateY(-50%);
 }
-.mine .avatar {
+.certify .code-btn button {
+  width: 200rpx;
+}
+.certify .avatar {
   width: 120rpx;
   height: 120rpx;
   border-radius: 10rpx;

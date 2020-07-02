@@ -1,23 +1,18 @@
+var util = require('../../utils/util.js');
+var api = require('../../net/api.js');
+var http = require('../../net/http.js');
+const app = getApp()
 Page({
 
     data: {
+        pageNo: 1,
+        pageSize: 10,
+        maxCount: null,
         /**
-         * 需要访问的url
+         * 获取到的列表数据
          */
-        urls: [
-            'https://www.csdn.net/api/articles?type=more&category=home&shown_offset=0',
-            'https://www.csdn.net/api/articles?type=new&category=arch',
-            'https://www.csdn.net/api/articles?type=new&category=ai',
-            'https://www.csdn.net/api/articles?type=new&category=newarticles'
-        ],
-        /**
-         * 当前访问的url索引
-         */
-        currentUrlIndex: 0,
-        /**
-         * 获取到的文章
-         */
-        articles: [],
+        listData: [],
+        options: {},
         /**
          * 控制上拉到底部时是否出现 "数据加载中..."
          */
@@ -29,7 +24,10 @@ Page({
     },
 
     onLoad: function(options) {
-        this.loadData(false);
+        this.loadData(false, options);
+        this.setData({
+            options: options
+        })
     },
 
     /**
@@ -39,33 +37,41 @@ Page({
      */
     bindTurnDetail: function(event) {
         const dataItem = event.currentTarget.dataset.item
-        console.log('bindTurnDetail', dataItem)
+        var url = '../maintainDetail/maintainDetail'
+        wx.navigateTo({
+            url: url + '?maintainId=' + dataItem.maintainId
+        })
     },
 
     /**
      * 加载数据
      */
-    loadData: function(tail, callback) {
-        var that = this,
-            urlIndex = that.data.currentUrlIndex;
-        wx.request({
-            url: that.data.urls[urlIndex],
-            success: function(r) {
-                var oldArticles = that.data.articles,
-                    newArticles = tail ? oldArticles.concat(r.data.articles) : r.data.articles;
-                that.setData({
-                    articles: newArticles,
-                    currentUrlIndex: (urlIndex + 1) >= that.data.urls.length ? 0 : urlIndex + 1
-                });
-                if (callback) {
-                    callback();
-                }
-            },
-            error: function(r) {
-                console.info('error', r);
-            },
-            complete: function() {}
-        });
+    loadData: function(tail, options, callback) {
+        var that = this;
+        var url = api.maintainInfoForTraditionDeviceByBuildingId
+        let proprietorId = options.buildingId ? options.buildingId : that.data.options.buildingId,
+            pageNo = that.data.pageNo,
+            pageSize = that.data.pageSize;
+        http.get(url, {
+            proprietorId,
+            // pageNo,
+            // pageSize
+        }, res => {
+            console.log('maintainInfoForTraditionDeviceByBuildingId', res)
+                // res.b.map(i => {
+                //     i.status_label = util.parseDictionary(app, 'maintain_status', i.status)
+                // })
+            var oldListData = that.data.listData,
+                newListData = tail ? oldListData.concat(res.b) : res.b;
+            that.setData({
+                listData: newListData,
+                pageNo: ++pageNo,
+                maxCount: res.b ? res.b.count : 0
+            });
+            if (callback) {
+                callback();
+            }
+        })
     },
 
     /**
@@ -84,8 +90,11 @@ Page({
         // wx.showLoading({
         //   title: '数据加载中...',
         // });
+        that.setData({
+            pageNo: 1
+        })
         setTimeout(function() {
-            that.loadData(false, () => {
+            that.loadData(false, {}, () => {
                 that.setData({
                     loadingData: false
                 });
@@ -101,10 +110,18 @@ Page({
      * 页面上拉触底事件的处理函数
      */
     onReachBottom: function() {
+        return
         console.info('onReachBottom');
         var hidden = this.data.hidden,
             loadingData = this.data.loadingData,
             that = this;
+        // if (that.data.listData.length >= that.data.maxCount) {
+        //     this.setData({
+        //         hidden: true,
+        //         loadingData: false
+        //     });
+        //     return
+        // }
         if (hidden) {
             this.setData({
                 hidden: false
@@ -123,15 +140,13 @@ Page({
             title: '数据加载中...',
         });
 
-        setTimeout(function() {
-            that.loadData(true, () => {
-                that.setData({
-                    hidden: true,
-                    loadingData: false
-                });
-                wx.hideLoading();
+        that.loadData(true, {}, () => {
+            that.setData({
+                hidden: true,
+                loadingData: false
             });
-            console.info('上拉数据加载完成.');
-        }, 1000);
+            wx.hideLoading();
+        });
+        console.info('上拉数据加载完成.');
     }
 })

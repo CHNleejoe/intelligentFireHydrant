@@ -1,31 +1,50 @@
 //mine.js
 //获取应用实例
-const app = getApp()
+const app = getApp();
+var util = require('../../utils/util.js');
+var api = require('../../net/api.js');
+var http = require('../../net/http.js');
 
 Page({
     data: {
-        motto: 'Hello World',
-        userInfo: {},
+        userInfo: getApp().globalData.userInfo,
         hasUserInfo: false,
         canIUse: wx.canIUse('button.open-type.getUserInfo'),
-        js_code: 'wxRg6ySSs9pswF20PikhNL1Y6bui4IxNXuhjGDiGghUeqiMdIC184XkJPr0ZT2G0'
+        js_code: 'wxRg6ySSs9pswF20PikhNL1Y6bui4IxNXuhjGDiGghUeqiMdIC184XkJPr0ZT2G0',
+        userType: getApp().globalData.userType,
+        userStatus: ''
     },
     //事件处理函数
-    bindViewTap: function() {
+    bindTurnToCerity: function() {
+        const that = this
+        var _url = '../certify/certify'
+        console.warn(_url)
+        if (that.data.userType != 1) return
         wx.navigateTo({
-            url: '../logs/logs'
+            url: _url + '?baseInfo=' + JSON.stringify(null) + '&userInfo=' + JSON.stringify(that.data.userInfo)
+        })
+    },
+    onShow: function() {
+        var userStatus = util.parseCertificationStatus(app.globalData.userStatus)
+        this.setData({
+            userInfo: app.globalData.userInfo,
+            hasUserInfo: true,
+            userStatus
         })
     },
     onLoad: function() {
         if (app.globalData.userInfo) {
+            var userStatus = util.parseCertificationStatus(app.globalData.userStatus)
             this.setData({
                 userInfo: app.globalData.userInfo,
-                hasUserInfo: true
+                hasUserInfo: true,
+                userStatus
             })
         } else if (this.data.canIUse) {
             // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
             // 所以此处加入 callback 以防止这种情况
             app.userInfoReadyCallback = res => {
+                app.globalData.userInfo = res.userInfo
                 this.setData({
                     userInfo: res.userInfo,
                     hasUserInfo: true
@@ -43,50 +62,6 @@ Page({
                 }
             })
         }
-        this.getUserId()
-    },
-    getUserInfo: function(e) {
-        console.log(e)
-        app.globalData.userInfo = e.detail.userInfo
-        this.setData({
-            userInfo: e.detail.userInfo,
-            hasUserInfo: true
-        })
-    },
-    bindGetUserInfo(e) {
-        console.log(e.detail.userInfo)
-    },
-    /**
-     * 获取用户信息
-     */
-    toGetUserInfo() {
-        if (app.globalData.userInfo) {
-            this.setData({
-                userInfo: app.globalData.userInfo,
-                hasUserInfo: true
-            })
-        } else if (this.data.canIUse) {
-            // 由于 getUserInfo 是网络请求， 可能会在 Page.onLoad 之后才返回
-            // 所以此处加入 callback 以防止这种情况
-            app.userInfoReadyCallback = res => {
-                this.setData({
-                    userInfo: res.userInfo,
-                    hasUserInfo: true
-                })
-            }
-        } else {
-            // 在没有 open-type=getUserInfo 版本的兼容处理
-            wx.getUserInfo({
-                success: res => {
-                    app.globalData.userInfo = res.userInfo
-                    this.setData({
-                        userInfo: res,
-                        hasUserInfo: true
-                    })
-                }
-            })
-        }
-        console.warn(this.data.userInfo, app.globalData.userInfo, 'userFino');
     },
     /**
      * 点击授权允许处理函数
@@ -100,20 +75,33 @@ Page({
                 tipCtl: false
             })
         })
+        wx.getUserInfo({
+            success: res => {
+                app.globalData.userInfo = res.userInfo
+                this.setData({
+                    userInfo: res.userInfo,
+                    hasUserInfo: true
+                })
+            }
+        })
     },
     /**
      * 获取用户登陆状态和登陆验证函数
      */
     requestLogin(callback = function() {}) {
+
         const that = this
         wx.login({
             success: function(r) {
+                console.log(r)
+
                 var code = r.code; //登录凭证
+
                 that.setData({
-                    code: code
+                    js_code: code
                 })
                 if (code) {
-                    that.getUserId()
+                    that.getUserOpenId()
                     if (callback) {
                         callback()
                     }
@@ -128,7 +116,7 @@ Page({
      */
     getUserInfo: function(e) {
         console.log(e)
-        app.globalData.userInfo = e.detail.userInfo
+            // app.globalData.userInfo = e.detail.userInfo
         const that = this
         this.setData({
             userInfo: e.detail.userInfo,
@@ -141,7 +129,7 @@ Page({
                 var code = r.code; //登录凭证
                 if (code) {
                     //2、调用获取用户信息接口
-                    that.getUserId()
+                    that.getUserOpenId(code)
                 } else {
                     console.log('获取用户登录态失败！' + r.errMsg)
                 }
@@ -154,37 +142,57 @@ Page({
     /**
      * 获取用户的openid
      */
-    getUserId() {
+    getUserOpenId(js_code = this.data.js_code) {
         const that = this
-        var url = that.data.requestLocation + '/user/login/wechat',
-            js_code = that.data.js_code;
-        console.log(123123)
+        var url = api.openId;
+
 
         var app = getApp();
-        wx.request({
-            url: url,
-            data: { js_code },
-            method: 'POST', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            header: {
-                'content-type': 'application/x-www-form-urlencoded',
-            },
-            success: function(res) {
-                console.log(res, 'getUserId')
+        http.get(url, {
+            jsCode: js_code
+        }, (res) => {
+            console.log(res, 'getUserOpenId')
 
-                if (res.data.success) {
-                    app.globalData.openId = res.data.data.openid
-                    that.requestForUserTestResult(res.data.data.openid)
-                } else {
-                    wx.showToast({
-                        title: res.data.msg,
-                        icon: 'none',
-                        duration: 2000
-                    })
-                }
-            },
-            fail: function() {},
-            complete: function() {}
-        })
-
+            app.globalData.openId = res.b.openId
+            that.getUserInfoByOpenIdFromBackend(res.b.openId)
+        }, function() {})
     },
+    /**
+     * 获取用户后台信息
+     */
+    getUserInfoByOpenIdFromBackend(openId) {
+        const that = this
+        var url = api.userInfoByOpenidFromBackend
+
+        var app = getApp();
+        http.post(url, {
+            wechatOpenId: openId
+        }, (res) => {
+            var userType = util.parseDictionary(app, 'organ_type', res.b.userInfo ? res.b.userInfo.userType : ''),
+                userStatus = util.parseCertificationStatus(res.b.certificationStatus)
+            if (res.b.userInfo) {
+                var userBaseInfo = {
+                    ...that.data.userInfo,
+                    ...res.b.userInfo
+                }
+                app.globalData.userInfo = userBaseInfo
+                that.setData({
+                    userInfo: userBaseInfo
+                })
+            }
+            console.log(userType, 'getUserInfoByOpenIdFromBackend')
+            app.globalData.userStatus = res.b.certificationStatus
+            that.setData({
+                hasUserInfo: true,
+                userType,
+                userStatus
+            })
+            if (res.b.certificationStatus == 1) {
+                var _url = '../certify/certify'
+                wx.navigateTo({
+                    url: _url + '?baseInfo=' + JSON.stringify(res.b.userInfo) + '&userInfo=' + JSON.stringify(that.data.userInfo)
+                })
+            }
+        }, function() {})
+    }
 })

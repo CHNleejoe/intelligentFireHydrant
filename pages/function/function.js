@@ -1,4 +1,8 @@
 // pages/function/function.js
+var utils = require('../../utils/util.js');
+var api = require('../../net/api.js');
+var http = require('../../net/http.js');
+const app = getApp()
 Page({
 
     /**
@@ -7,50 +11,14 @@ Page({
     data: {
         activeName: 0,
 
-        buildingList: [{
-                id: 0,
-                name: '华瀚创新s厦A座',
-                num: 12,
-                o_num: 1,
-                n_num: 2,
-                oragneList: [
-                    { name: '建筑地址', value: '华瀚创新园华瀚座' },
-                    { name: '维修公司', value: '华瀚科技控股物业有限公司' },
-                    { name: '物业公司', value: '华瀚科技控股物业有限公司' },
-                ]
-            },
-            {
-                id: 1,
-                name: '华瀚创新园华瀚s',
-                num: 1,
-                o_num: 1,
-                n_num: 2,
-                oragneList: [
-                    { name: '建筑地址', value: '华瀚创新s技大厦A座' },
-                    { name: '维修公司', value: '华瀚科技控股物业有限公司' },
-                    { name: '物业公司', value: '华瀚科技s业有限公司' },
-                ]
-            },
-            {
-                id: 2,
-                name: '华瀚创2华瀚科技大厦A座',
-                num: 33,
-                o_num: 1,
-                n_num: 2,
-                oragneList: [
-                    { name: '建筑地址', value: '华瀚创新园华瀚科技大厦A座' },
-                    { name: '维修公司', value: '华瀚科技s股物业有限公司' },
-                    { name: '物业公司', value: '华瀚科技控股物s公司' },
-                ]
-            },
-        ],
+        buildingList: [],
 
         buildingBtns: [{
                 btn_id: 0,
                 icon: '../../statics/imgs/yujing.png',
                 name: '预警信息',
                 data: {
-                    name: 'num',
+                    name: 'warnMessageNo',
                     type: 'warn'
                 }
             },
@@ -59,7 +27,7 @@ Page({
                 icon: '../../statics/imgs/chuangt.png',
                 name: '传统设备',
                 data: {
-                    name: 'o_num',
+                    name: 'traditionalDeviceNo',
                     type: 'normal'
                 }
             },
@@ -68,78 +36,98 @@ Page({
                 icon: '../../statics/imgs/zhineng.png',
                 name: '智能设备',
                 data: {
-                    name: 'n_num',
+                    name: 'smartDeviceNo',
                     type: 'normal'
                 }
             },
             {
-                btn_id: 2,
+                btn_id: 3,
                 icon: '../../statics/imgs/baoyang.png',
                 name: '保养信息'
             }
         ]
     },
+    /**
+     * 生命周期函数--监听页面加载
+     */
+    onLoad: function(options) {
+        const that = this;
+        // that.getDeviceList()
 
+    },
+
+    onShow: function(options) {
+        const that = this;
+        that.getDeviceList()
+
+    },
+    /**
+     * select列表切换函数
+     * @param {*} event 事件对象
+     */
     onChange(event) {
-        console.log('onchange', event)
         this.setData({
             activeName: event.detail
         });
     },
 
-    /**
-     * 生命周期函数--监听页面加载
-     */
-    onLoad: function(options) {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面初次渲染完成
-     */
-    onReady: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面显示
-     */
-    onShow: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload: function() {
-
-    },
-
-    /**
-     * 页面相关事件处理函数--监听用户下拉动作
-     */
-    onPullDownRefresh: function() {
-
-    },
-
-    /**
-     * 页面上拉触底事件的处理函数
-     */
-    onReachBottom: function() {
-
-    },
 
     /**
      * 用户点击右上角分享
      */
     onShareAppMessage: function() {
+
+    },
+
+    /**
+     * 获取建筑信息列表
+     */
+    getDeviceList() {
+        const that = this;
+
+        var url = api.deviceList
+
+        http.get(url, {}, (res) => {
+            console.log(res, 'deviceList')
+            that.setData({
+                buildingList: res.b
+            })
+        }, function() {})
+    },
+
+    /**
+     * 点击4个btn进行跳转
+     * @param {*} event 事件对象
+     */
+    clickDetailFunc(event) {
+        const that = this;
+        let type = event.currentTarget.dataset.functiontype,
+            buildingId = event.currentTarget.dataset.buildingid,
+            url;
+        console.log('clickDetailFunc', event.currentTarget.dataset)
+
+        switch (type) {
+            case 0:
+                url = '../warningInfo/warningInfo'
+                break;
+            case 1:
+                url = '../tradition/tradition'
+                utils.loadDictionary('traditional_device_type', app)
+                utils.loadDictionary('device_status', app)
+                break
+            case 2:
+                url = '../intelligent/intelligent'
+                utils.loadDictionary('smart_device_type', app)
+                utils.loadDictionary('device_status', app)
+                break
+            case 3:
+                url = '../maintainInfo/maintainInfo'
+                utils.loadDictionary('maintain_status', app)
+                break
+        }
+        wx.navigateTo({
+            url: url + '?buildingId=' + buildingId
+        })
 
     }
 })

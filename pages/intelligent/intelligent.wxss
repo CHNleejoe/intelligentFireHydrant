@@ -30,6 +30,11 @@
   font-size: 32rpx;
   font-family: PingFang SC;
   color: #3091f2;
+  transition: all .3s;
+}
+.articles-container .btn:active {
+  opacity: .8;
+  background: #eee;
 }
 .articles-container .status {
   width: 120rpx;
@@ -47,8 +52,11 @@
 .articles-container .status.active {
   background: #0FC37C;
 }
-.articles-container .status.warning {
+.articles-container .status.stop {
   background: #FD545C;
+}
+.articles-container .status.maintain {
+  background: #ffa136;
 }
 .articles-container .info {
   font-size: 12px;
