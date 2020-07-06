@@ -238,36 +238,38 @@ Page({
                 xData.push(dayjs(item.monitorTime).format('hh:mm:ss'));
                 yData.push(parseFloat(item.detail[0].value));
             })
-            console.log(xData, yData)
-            chartLine.setOption({
-                xAxis: {
-                    data: xData
-                },
-                yAxis: {
-                    max: maxLineVal,
-                    min: 0
-                },
-                series: [{
-                    data: yData,
-                    markLine: {
-                        data: [{
-                                name: 'Y 轴值为 100 的水平线',
-                                yAxis: minLineVal,
-                                lineStyle: {
-                                    color: '#37A2DA'
+            console.log(xData, yData, minLineVal, maxLineVal)
+            setTimeout(function() {
+                chartLine.setOption({
+                    xAxis: {
+                        data: xData
+                    },
+                    yAxis: {
+                        max: maxLineVal,
+                        min: 0
+                    },
+                    series: [{
+                        data: yData,
+                        markLine: {
+                            data: [{
+                                    name: 'Y 轴值为 100 的水平线',
+                                    yAxis: minLineVal,
+                                    lineStyle: {
+                                        color: '#37A2DA'
+                                    }
+                                },
+                                {
+                                    name: 'Y 轴值为 100 的水平线',
+                                    yAxis: maxLineVal,
+                                    lineStyle: {
+                                        color: '#f2960d'
+                                    }
                                 }
-                            },
-                            {
-                                name: 'Y 轴值为 100 的水平线',
-                                yAxis: maxLineVal,
-                                lineStyle: {
-                                    color: '#f2960d'
-                                }
-                            }
-                        ]
-                    }
-                }]
-            });
+                            ]
+                        }
+                    }]
+                });
+            }, 300)
         })
     },
     loadWarningData() {

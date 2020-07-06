@@ -10,7 +10,7 @@ Page({
         userInfo: getApp().globalData.userInfo,
         hasUserInfo: false,
         canIUse: wx.canIUse('button.open-type.getUserInfo'),
-        js_code: 'wxRg6ySSs9pswF20PikhNL1Y6bui4IxNXuhjGDiGghUeqiMdIC184XkJPr0ZT2G0',
+        js_code: '',
         userType: getApp().globalData.userType,
         userStatus: ''
     },
@@ -19,7 +19,7 @@ Page({
         const that = this
         var _url = '../certify/certify'
         console.warn(_url)
-        if (that.data.userType != 1) return
+        if ((app.globalData.userStatus && app.globalData.userStatus != 1) || !that.data.hasUserInfo) return
         wx.navigateTo({
             url: _url + '?baseInfo=' + JSON.stringify(null) + '&userInfo=' + JSON.stringify(that.data.userInfo)
         })
@@ -28,7 +28,6 @@ Page({
         var userStatus = util.parseCertificationStatus(app.globalData.userStatus)
         this.setData({
             userInfo: app.globalData.userInfo,
-            hasUserInfo: true,
             userStatus
         })
     },
@@ -66,24 +65,27 @@ Page({
     /**
      * 点击授权允许处理函数
      */
-    handleOpenType() {
+    handleOpenType(e) {
         const that = this
-
-        this.requestLogin(_ => {
-            that.setData({
-                chanceCtl: true,
-                tipCtl: false
-            })
-        })
-        wx.getUserInfo({
-            success: res => {
-                app.globalData.userInfo = res.userInfo
-                this.setData({
-                    userInfo: res.userInfo,
-                    hasUserInfo: true
+        if (e.detail.userInfo) {
+            this.requestLogin(_ => {
+                that.setData({
+                    chanceCtl: true,
+                    tipCtl: false
                 })
-            }
-        })
+            })
+            wx.getUserInfo({
+                success: res => {
+                    app.globalData.userInfo = res.userInfo
+                    this.setData({
+                        userInfo: res.userInfo,
+                        hasUserInfo: true
+                    })
+                }
+            })
+        } else {
+
+        }
     },
     /**
      * 获取用户登陆状态和登陆验证函数
@@ -173,15 +175,19 @@ Page({
             if (res.b.userInfo) {
                 var userBaseInfo = {
                     ...that.data.userInfo,
+                    userTypeLable: userType,
                     ...res.b.userInfo
                 }
                 app.globalData.userInfo = userBaseInfo
+
                 that.setData({
                     userInfo: userBaseInfo
                 })
             }
             console.log(userType, 'getUserInfoByOpenIdFromBackend')
             app.globalData.userStatus = res.b.certificationStatus
+            app.globalData.proprietorList = res.b.proprietorList
+
             that.setData({
                 hasUserInfo: true,
                 userType,

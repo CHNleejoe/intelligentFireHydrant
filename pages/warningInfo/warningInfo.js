@@ -15,6 +15,7 @@ Page({
             scale: 18,
         },
         markers: [],
+        mapMarkers: [],
         markerIndex: 0,
 
         proprietorList: []
@@ -41,15 +42,16 @@ Page({
     changeMarker(event) {
         const that = this;
         let index = event.currentTarget.dataset.index,
-            longitude = that.data.markers[index].posLong,
-            latitude = that.data.markers[index].posLatitude
+            longitude = that.data.mapMarkers[index].longitude,
+            latitude = that.data.mapMarkers[index].latitude
+
 
         that.setData({
             markerIndex: index,
             longitude: longitude,
             latitude: latitude
         })
-        console.log(this.mapCtx.moveToLocation, latitude, longitude, 'mapCtx')
+        console.log(latitude, longitude, 'mapCtx')
         this.mapCtx.moveToLocation({
             longitude: longitude,
             latitude: latitude,
@@ -62,7 +64,30 @@ Page({
             proprietorId: options ? options.buildingId : ''
         }, res => {
             console.log(res, 'intelligentWarningListByBuildingId')
+            var mapMarkers = []
+            res.b.list.map((item, index) => {
+                var tmp = {}
+                tmp.id = index
+                tmp.longitude = item.posLong
+                tmp.latitude = item.posLatitude
+                tmp.iconPath = '../../statics/imgs/dingwei.png'
+
+                tmp.callout = {
+                        content: `地址：${item.proprietorName}\n设备编码：${item.snCode}\n监测值：${item.monitorData[0].value}\n监测时间：${item.monitorTime}`, //文本
+                        color: '#FF0202', //文本颜色
+                        borderRadius: 3, //边框圆角
+                        borderWidth: 1, //边框宽度
+                        borderColor: '#FF0202', //边框颜色
+                        bgColor: '#ffffff', //背景色
+                        padding: 5, //文本边缘留白
+                        textAlign: 'center' //文本对齐方式。有效值: left, right, center
+                    }
+                    // tmp.longitude = that.data.mapData.longitude
+                    // tmp.latitude = that.data.mapData.latitude
+                mapMarkers.push(tmp)
+            })
             that.setData({
+                mapMarkers: mapMarkers,
                 markers: res.b.list,
                 mapData: {
                     longitude: res.b.list[0].posLong,

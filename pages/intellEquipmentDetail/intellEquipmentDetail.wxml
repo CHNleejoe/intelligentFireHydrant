@@ -69,7 +69,7 @@
         </view>
     </van-tab>
     <van-tab class="warning" title="预警信息">
-        <view class="warning-item" hover-class="none" hover-stop-propagation="false" wx:for='{{warningData.monitorData}}' wx:key='warningItem' wx:for-item='warningItem'>
+        <view class="warning-item" hover-class="none" hover-stop-propagation="false" wx:for='{{warningData.data.list}}' wx:key='index' wx:for-item='warningItem'>
             <view class="inner" hover-class="none" hover-stop-propagation="false">
                 <view class="p time">
                     {{warningItem.monitorTime}}

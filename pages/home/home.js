@@ -16,6 +16,7 @@ Page({
             scale: 18,
         },
         markers: [],
+        mapMarkers: [],
         markerIndex: 0,
         userType: 1,
 
@@ -43,13 +44,14 @@ Page({
      * 生命周期函数--页面显示
      */
     onShow: function() {
+        console.log(app)
         this.setData({
-            userType: app.globalData.userType,
+            userType: app.globalData.userInfo ? app.globalData.userInfo.userType : '1',
             userStatus: app.globalData.userStatus,
             proprietorList: app.globalData.proprietorList
         })
         this.data.userType == 2 && this.data.userType == 3 && this.loadWarningInfo()
-        this.data.userType == 4 && this.loadMaintainTask()
+        this.data.userType == 4 && this.loadMaintainTask(app.globalData.proprietorList)
     },
     /**
      * 生命周期函数--监听页面初次渲染完成
@@ -94,7 +96,7 @@ Page({
         http.get(url, {
             jsCode: js_code
         }, (res) => {
-            console.log(res, 'getUserOpenId')
+            console.log(app, 'getUserOpenId')
 
             app.globalData.openId = res.b.openId
             that.getUserInfoByOpenIdFromBackend(res.b.openId)
@@ -114,10 +116,11 @@ Page({
                 var userType = util.parseDictionary(app, 'organ_type', res.b.userInfo ? res.b.userInfo.userType : '')
 
                 var userBaseInfo = {
-                    ...app.globalData.userInfo,
-                    ...res.b.userInfo
-                }
-                userBaseInfo.userType = userType
+                        ...app.globalData.userInfo,
+                        userTypeLable: userType,
+                        ...res.b.userInfo
+                    }
+                    // userBaseInfo.userType = userType
                 app.globalData.userInfo = userBaseInfo
             }
             app.globalData.userStatus = res.b.certificationStatus
@@ -139,8 +142,8 @@ Page({
     changeMarker(event) {
         const that = this;
         let index = event.currentTarget.dataset.index,
-            longitude = that.data.markers[index].posLong,
-            latitude = that.data.markers[index].posLatitude
+            longitude = that.data.mapMarkers[index].longitude,
+            latitude = that.data.mapMarkers[index].latitude
 
         that.setData({
             markerIndex: index,
@@ -164,6 +167,28 @@ Page({
             proprietorId: that.data.proprietorList[0].id
         }, res => {
             console.log(res, 'intelligentWarningListByBuildingId')
+            var mapMarkers = []
+            res.b.list.map((item, index) => {
+                var tmp = {}
+                tmp.id = index
+                tmp.longitude = item.posLong
+                tmp.latitude = item.posLatitude
+                tmp.iconPath = '../../statics/imgs/dingwei.png'
+
+                tmp.callout = {
+                        content: `地址：${item.proprietorName}\n设备编码：${item.snCode}\n监测值：${item.monitorData[0].value}\n监测时间：${item.monitorTime}`, //文本
+                        color: '#FF0202', //文本颜色
+                        borderRadius: 3, //边框圆角
+                        borderWidth: 1, //边框宽度
+                        borderColor: '#FF0202', //边框颜色
+                        bgColor: '#ffffff', //背景色
+                        padding: 5, //文本边缘留白
+                        textAlign: 'center' //文本对齐方式。有效值: left, right, center
+                    }
+                    // tmp.longitude = that.data.mapData.longitude
+                    // tmp.latitude = that.data.mapData.latitude
+                mapMarkers.push(tmp)
+            })
             that.setData({
                 markers: res.b.list,
                 mapData: {
@@ -179,7 +204,9 @@ Page({
             scanType: ['barCode', 'qrCode', 'datamatrix', 'pdf417'],
             success: res => {
                 if (res.errMsg == 'scanCode:ok') {
-                    var deviceInfo = { deviceId: res.result }
+                    console.log(res, 'cameraQrCode')
+                    var id = res.result.split('=')[1]
+                    var deviceInfo = { deviceId: id }
                     wx.navigateTo({
                         url: '../tradEquipmentDetail/tradEquipmentDetail?deviceInfo=' + JSON.stringify(deviceInfo)
                     })
@@ -218,12 +245,12 @@ Page({
             url: url + '?buildingInfo=' + JSON.stringify(that.data.proprietorList[0])
         })
     },
-    loadMaintainTask(options = null) {
+    loadMaintainTask(proprietorList = null) {
         const that = this;
         var url = api.maintainInfoForTraditionDeviceByBuildingId
         console.log(app.globalData)
         http.get(url, {
-            proprietorId: that.data.proprietorList[0].id
+            proprietorId: proprietorList ? proprietorList[0].id : that.data.proprietorList[0].id
         }, res => {
             var maintainInfo = res.b
             maintainInfo.map(item => {

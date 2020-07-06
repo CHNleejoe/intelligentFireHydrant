@@ -21,7 +21,7 @@
     </view>
     <view class="detail-item" wx:for="{{detailData.maintainData}}" wx:key='index' wx:for-item="detailItem" hover-class="none" hover-stop-propagation="false">
         <view class="images" hover-class="none" hover-stop-propagation="false">
-            <image wx:for='{{imgs}}' wx:for-item='imageItem' wx:for-index='imgIndex' wx:key='imgIndex' data-detailItem="{{detailItem}}" data-current="{{imageItem}}" bindtap='previewImages' class="images-item" src="{{imageItem}}" mode="aspectFit|aspectFill|widthFix"
+            <image wx:for='{{detailItem.maintainPhotosList}}' wx:for-item='imageItem' wx:for-index='imgIndex' wx:key='imgIndex' data-detailItem="{{detailItem}}" data-current="{{imageItem}}" bindtap='previewImages' class="images-item" src="{{imageItem}}" mode="aspectFit|aspectFill|widthFix"
                 lazy-load="false" binderror="" bindload="">
             </image>
         </view>
@@ -37,9 +37,9 @@
             </view>
             <view class="p">
                 维护项目：
-                <view class="p-detial color" wx:for='{{item.maintainSituation}}' wx:for-index='situationIndex' wx:key='situationIndex' wx:for-item='maintainOrgan'>
+                <view class="p-detial color" wx:for='{{detailItem.maintainSituation}}' wx:for-index='situationIndex' wx:key='situationIndex' wx:for-item='maintainOrgan'>
                     <view>{{maintainOrgan.contentName}}:</view>
-                    <view class="right">{{maintainOrgan.result?maintainOrgan.result:''}}</view>
+                    <view class="right">{{maintainOrgan.result == 1?'合格':'不合格'}}</view>
                 </view>
             </view>
         </view>

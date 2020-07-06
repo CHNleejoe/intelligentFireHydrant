@@ -1,6 +1,6 @@
 <!--pages/warningInfo/warningInfo.wxml-->
 <view class="map" hover-class="none" hover-stop-propagation="false">
-    <map name="homeMap" id="homeMap" longitude='{{mapData.longitude}}' latitude='{{mapData.latitude}}' scale='{{mapData.scale}}' markers="{{markers}}" show-location='true'></map>
+    <map name="homeMap" id="homeMap" longitude='{{mapData.longitude}}' latitude='{{mapData.latitude}}' scale='{{mapData.scale}}' markers="{{mapMarkers}}" show-location='true'></map>
     <view class="warning" hover-class="none" hover-stop-propagation="false">
         <view class="title" hover-class="none" hover-stop-propagation="false">
             实时预警

@@ -56,9 +56,9 @@ Page({
         }, res => {
             console.log('maintainDetailInfoForTraditionDevice', res)
             res.b.maintainDeviceList.map(i => {
-                i.maintainPhotos == '' && (i.maintainPhotosList = [])
-
-                i.maintainPhotos != '' && (i.maintainPhotosList = i.maintainPhotos.split(','))
+                i.maintainPhotos == '' && (i.maintainPhotosList = []);
+                (!i.maintainPhotos) && (i.maintainPhotosList = []);
+                i.maintainPhotos && i.maintainPhotos != '' && (i.maintainPhotosList = i.maintainPhotos.split(','))
             })
             that.setData({
                 detailInfo: res.b

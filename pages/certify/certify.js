@@ -240,9 +240,10 @@ Page({
             orgId: that.data.companyVal,
         }, res => {
             wx.showToast({
-                title: '用户认证完成，等待审核中',
+                title: '用户认证审核中',
                 icon: 'success',
             });
+            app.globalData.userStatus = 2
             setTimeout(function() {
                 wx.navigateBack()
             }, 1000)

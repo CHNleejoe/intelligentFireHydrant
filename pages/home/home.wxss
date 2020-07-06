@@ -183,7 +183,6 @@
 .add {
   width: 350rpx;
   height: 90rpx;
-  background: #609ef7;
   border-radius: 45rpx;
   position: fixed;
   color: white;

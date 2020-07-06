@@ -50,11 +50,12 @@ Page({
     previewImages: function(event) {
         const that = this;
 
-        let detailItem = event.currentTarget.dataset.detailItem,
+        let detailItem = event.currentTarget.dataset.detailitem,
             current = String(event.currentTarget.dataset.current)
+
         console.log(event)
         wx.previewImage({
-            urls: that.data.imgs,
+            urls: detailItem.maintainPhotosList,
             current
         })
     },
@@ -71,6 +72,11 @@ Page({
             deviceId,
         }, res => {
             console.log('traditionDetailByDeviceId', res)
+            res.b.maintainData.map(i => {
+                i.maintainPhotos == '' && (i.maintainPhotosList = []);
+                (!i.maintainPhotos) && (i.maintainPhotosList = []);
+                i.maintainPhotos && i.maintainPhotos != '' && (i.maintainPhotosList = i.maintainPhotos.split(','))
+            })
             res.b.status_label = util.parseDictionary(app, 'device_status', res.b.status)
             res.b.status == 0 && (res.b.status_class = 'stop')
             res.b.status == 1 && (res.b.status_class = 'active')
