@@ -7,7 +7,7 @@
 
     <van-cell title="建筑单位名称" bind:click="openBuildingPikerControl" is-link value="{{buildingName}}" />
 
-    <van-field value="{{ equipmentAdress }}" label="设备地址" clearable placeholder="请输入设备地址" input-align="right" />
+    <van-field value="{{ info.equipmentAdress }}" data-val="equipmentAdress" bind:change="fieldChange" bind:clear='fieldClear' label="设备地址" clearable placeholder="请输入设备地址" input-align="right" />
     <!-- <van-cell title="所属物业公司" bind:click="openCompanyPikerControl" is-link value="{{companyName}}" /> -->
     <van-field value="{{companyName}}" label="所属物业公司" readonly input-align="right" />
 

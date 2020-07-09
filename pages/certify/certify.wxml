@@ -4,11 +4,12 @@
         <image src='{{userInfo.avatarUrl}}' slot="icon" class="avatar">
         </image>
     </van-cell>
-    <van-field data-val="mobile" bind:change="fieldChange" type='tel' value="{{ info.mobile }}" center clearable label="联系方式" placeholder="请输入手机号" use-button-slot>
-        <van-button class="code-btn" slot="button" size="small" type="primary" bindtap='sendMobileCode'>发送验证码</van-button>
+    <van-field data-val="mobile" bind:change="fieldChange" bind:clear='fieldClear' type='tel' value="{{ info.mobile }}" center clearable label="联系方式" placeholder="请输入手机号" use-button-slot>
+        <van-button class="code-btn" wx:if="{{canSendCode}}" slot="button" size="small" type="primary" bindtap='sendMobileCode'>发送验证码</van-button>
+        <van-button class="code-btn disabled" wx:else slot="button" size="small" type="primary" disabled>{{time}}秒后可再发</van-button>
     </van-field>
-    <van-field data-val="code" bind:change="fieldChange" input-align="right" label="验证码" value="{{ info.code }}" placeholder="输入验证码" />
-    <van-field data-val="name" bind:change="fieldChange" input-align="right" label="姓名" value="{{ info.name }}" placeholder="输入真实姓名" />
+    <van-field data-val="code" bind:change="fieldChange" bind:clear='fieldClear' input-align="right" label="验证码" value="{{ info.code }}" placeholder="输入验证码" />
+    <van-field data-val="name" bind:change="fieldChange" bind:clear='fieldClear' input-align="right" label="姓名" value="{{ info.name }}" placeholder="输入真实姓名" />
 
     <van-cell title="公司类型" is-link value="{{companyType}}" arrow-direction="down" data-type="companyType" bindtap='showPicker' />
     <van-cell title="所属公司" is-link value="{{company}}" arrow-direction="down" data-type="company" bindtap='showPicker' />

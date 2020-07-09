@@ -16,6 +16,11 @@ Page({
         buildingName: '请选择物业小区',
         buildingId: '',
         equipmentAdress: '',
+
+        info: {
+            equipmentAdress: '',
+
+        },
         equipmentNum: 12,
         userInfo: app.globalData.userInfo,
         options: {},
@@ -81,7 +86,35 @@ Page({
         })
         this.loadMaintainType()
     },
-
+    /**
+     * 对于field元素的操作 --- 输入
+     * @param {*} event 事件对象
+     */
+    fieldChange(event) {
+        const that = this;
+        var info_ = that.data.info;
+        let dataset = event.currentTarget.dataset,
+            value = event.detail,
+            name = dataset.val;
+        info_[name] = value
+        that.setData({
+            info: info_
+        })
+    },
+    /**
+     * 对于field元素的操作 --- 清除
+     * @param {*} event 事件对象
+     */
+    fieldClear(event) {
+        const that = this;
+        var info_ = that.data.info;
+        let dataset = event.currentTarget.dataset,
+            name = dataset.val;
+        info_[name] = ''
+        that.setData({
+            info: info_
+        })
+    },
     /**
      * 时间选择器控制函数
      * @param {*} options 
@@ -140,6 +173,10 @@ Page({
             })
         })
     },
+    /**
+     * 选择建筑物
+     * @param {*} event 事件对象 
+     */
     confrimBuildingPickerData(event) {
         let type = event.currentTarget.dataset.type
         const { picker, value, index } = event.detail;
@@ -162,6 +199,9 @@ Page({
         })
 
     },
+    /**
+     * 关闭建筑选择器
+     */
     closeBuildingPikerControl() {
         this.setData({ buildingPickerControl: false });
     },
@@ -190,7 +230,8 @@ Page({
         const { name, label } = event.currentTarget.dataset;
         this.setData({
             maintainTypeId: name,
-            maintainTypeLabel: label
+            maintainTypeLabel: label,
+            maintainTypePickerControl: false
         });
     },
     /**
@@ -207,6 +248,24 @@ Page({
         } else if (that.data.maintainTypeId == '') {
             wx.showToast({
                 title: '保养类型不能为空',
+                icon: 'none',
+            });
+            return
+        } else if (that.data.buildingId == '') {
+            wx.showToast({
+                title: '请选择物业小区',
+                icon: 'none',
+            });
+            return
+        } else if (that.data.companyId == '') {
+            wx.showToast({
+                title: '请选择建筑单位',
+                icon: 'none',
+            });
+            return
+        } else if (that.data.info.equipmentAdress == '') {
+            wx.showToast({
+                title: '请输入设备地址',
                 icon: 'none',
             });
             return

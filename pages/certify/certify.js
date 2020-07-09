@@ -4,6 +4,7 @@ const app = getApp();
 var util = require('../../utils/util.js');
 var api = require('../../net/api.js');
 var http = require('../../net/http.js');
+var timer = null;
 
 Page({
     data: {
@@ -18,6 +19,9 @@ Page({
             code: '',
             name: ''
         },
+
+        time: 59,
+        canSendCode: true,
 
         companyTypeControl: false,
         companyType: '',
@@ -49,6 +53,7 @@ Page({
         }
         // this.getUserOpenId()
         this.requestCompanyType()
+
     },
     requestCompanyType() {
         const that = this;
@@ -92,15 +97,27 @@ Page({
             value = event.detail,
             name = dataset.val;
         info_[name] = value
-        that.data[name] = value;
         that.setData({
             info: info_
         })
 
     },
+    fieldClear(event) {
+        const that = this;
+        var info_ = that.data.info;
+        let dataset = event.currentTarget.dataset,
+            name = dataset.val;
+        info_[name] = ''
+        that.setData({
+            info: info_
+        })
+    },
     sendMobileCode() {
         const that = this;
         const url = api.mobileCode;
+        that.setData({
+            time: 60
+        })
         if (that.data.info.mobile == '') {
             wx.showToast({
                 title: "请输入手机号",
@@ -108,7 +125,7 @@ Page({
                 icon: 'none'
             })
             return
-        } else if (!util.checkMobile(that.data.mobile)) {
+        } else if (!util.checkMobile(that.data.info.mobile)) {
             wx.showToast({
                 title: "不是完整的11位手机号或者正确的手机号前七位",
                 duration: 2000,
@@ -121,6 +138,15 @@ Page({
             type: 1
         }, res => {
             console.log(res)
+            timer = setInterval(function() {
+                var flag = false
+                flag = (that.data.time == 1)
+                that.setData({
+                    time: that.data.time - 1,
+                    canSendCode: flag
+                })
+                flag && (clearInterval(timer))
+            }, 1000)
         })
     },
     confrimPickerData(event) {
@@ -232,10 +258,10 @@ Page({
             return
         }
         http.post(url, {
-            mobile: that.data.mobile,
-            code: that.data.code,
+            mobile: that.data.info.mobile,
+            code: that.data.info.code,
             wechatOpenId: app.globalData.openId,
-            name: that.data.name,
+            name: that.data.info.name,
             orgType: that.data.companyTypeVal,
             orgId: that.data.companyVal,
         }, res => {

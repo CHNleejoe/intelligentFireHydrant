@@ -4,28 +4,28 @@
         <view class='articles-container'>
             <view class='info'>
                 <view class="p" hover-class="none" hover-stop-propagation="false">
-                    <text class='created-at'>保养开始时间：{{item.beginTime}}</text>
+                    <text class='created-at'>保养开始时间：{{item.beginTime?item.beginTime:''}}</text>
                 </view>
                 <view class="p" hover-class="none" hover-stop-propagation="false">
-                    <text class='created-at'>保养结束时间：{{item.endTime}}</text>
+                    <text class='created-at'>保养结束时间：{{item.endTime?item.endTime:''}}</text>
                 </view>
                 <view class="p" hover-class="none" hover-stop-propagation="false">
-                    <text class='created-at'>保养计划开始时间：{{item.beginPlaneTime}}</text>
+                    <text class='created-at'>保养计划开始时间：{{item.beginPlaneTime?item.beginPlaneTime:''}}</text>
                 </view>
                 <view class="p" hover-class="none" hover-stop-propagation="false">
-                    <text class='created-at'>保养计划结束时间：{{item.endPlaneTime}}</text>
+                    <text class='created-at'>保养计划结束时间：{{item.endPlaneTime?item.endPlaneTime:''}}</text>
                 </view>
                 <view class="p" hover-class="none" hover-stop-propagation="false">
-                    <text class='created-at'>维修部门：{{item.organName}}</text>
+                    <text class='created-at'>维修部门：{{item.organName?item.organName:''}}</text>
                 </view>
                 <view class="p" hover-class="none" hover-stop-propagation="false">
-                    <text class='created-at'>保养人：{{item.maintainPersons}}</text>
+                    <text class='created-at'>保养人：{{item.maintainPersons?item.maintainPersons:''}}</text>
                 </view>
                 <view class="p" hover-class="none" hover-stop-propagation="false">
-                    <text class='created-at'>设备数量：{{item.deviceNo}}</text>
+                    <text class='created-at'>设备数量：{{item.deviceNo?item.deviceNo:0}}</text>
                 </view>
                 <view class="p" hover-class="none" hover-stop-propagation="false">
-                    <text class='created-at'>地址：{{item.address}}</text>
+                    <text class='created-at'>地址：{{item.address?item.address:''}}</text>
                 </view>
             </view>
             <view class="btn" data-item="{{item}}" bindtap="bindTurnDetail" hover-class="none" hover-stop-propagation="false">

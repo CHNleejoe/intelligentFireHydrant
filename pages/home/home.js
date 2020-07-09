@@ -144,14 +144,19 @@ Page({
         let index = event.currentTarget.dataset.index,
             longitude = that.data.mapMarkers[index].longitude,
             latitude = that.data.mapMarkers[index].latitude
+        var mapMarkers = that.data.mapMarkers
 
+        mapMarkers[that.data.markerIndex].callout.display = 'BYCLICK'
+        mapMarkers[index].callout.display = 'ALWAYS'
         that.setData({
             markerIndex: index,
             longitude: longitude,
-            latitude: latitude
+            latitude: latitude,
+            mapMarkers
+
         })
         console.log(this.mapCtx.moveToLocation, latitude, longitude, 'mapCtx')
-        this.mapCtx.moveToLocation({
+        that.mapCtx.moveToLocation({
             longitude: longitude,
             latitude: latitude,
         })
@@ -176,13 +181,14 @@ Page({
                 tmp.iconPath = '../../statics/imgs/dingwei.png'
 
                 tmp.callout = {
-                        content: `地址：${item.proprietorName}\n设备编码：${item.snCode}\n监测值：${item.monitorData[0].value}\n监测时间：${item.monitorTime}`, //文本
+                        content: `地址：${item.locationDetail}\n设备编码：${item.snCode}\n监测值：${item.monitorData[0].value}\n监测时间：${item.monitorTime}`, //文本
                         color: '#FF0202', //文本颜色
                         borderRadius: 3, //边框圆角
                         borderWidth: 1, //边框宽度
                         borderColor: '#FF0202', //边框颜色
                         bgColor: '#ffffff', //背景色
                         padding: 5, //文本边缘留白
+                        display: that.data.markerIndex == index ? 'ALWAYS' : 'BYCLICK',
                         textAlign: 'center' //文本对齐方式。有效值: left, right, center
                     }
                     // tmp.longitude = that.data.mapData.longitude
@@ -195,6 +201,10 @@ Page({
                     longitude: res.b.list[0].posLong,
                     latitude: res.b.list[0].posLatitude
                 },
+            })
+            that.mapCtx.moveToLocation({
+                longitude: mapMarkers[0].longitude,
+                latitude: mapMarkers[0].latitude,
             })
         })
     },

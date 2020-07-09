@@ -105,8 +105,8 @@ App({
         userType: null,
         userStatus: null,
 
-        // requestLocation: 'http://192.168.3.21:8080/fhms-saas/api/app/v1',
-        requestLocation: 'http://192.168.3.171:8282/fhms-saas/api/app/v1',
+        requestLocation: 'http://192.168.3.21:8080/fhms-saas/api/app/v1',
+        // requestLocation: 'http://192.168.3.171:8282/fhms-saas/api/app/v1',
         version: 'v1',
         openId: '',
         dictionarys: {},

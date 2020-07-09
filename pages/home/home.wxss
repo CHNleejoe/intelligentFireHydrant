@@ -93,6 +93,7 @@
 .maintain {
   background: #F5F5F7;
   padding-top: 30rpx;
+  padding-bottom: 180rpx;
 }
 .data-loading {
   height: 100rpx;
@@ -196,4 +197,7 @@
 }
 .add > button {
   width: 100%;
+  position: absolute;
+  transform: translateX(-50%);
+  left: 50%;
 }

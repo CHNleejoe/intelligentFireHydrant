@@ -60,6 +60,14 @@ Page({
             pageNo,
             pageSize
         }, res => {
+            if (!res.b || !res.b.list) {
+                that.setData({
+                    listData: [],
+                    pageNo: ++pageNo,
+                    maxCount: 0
+                });
+                return
+            }
             res.b.list.map(i => {
                 i.status_label = util.parseDictionary(app, 'device_status', i.status)
                 i.status == 0 && (i.status_class = 'stop')

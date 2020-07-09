@@ -83,8 +83,9 @@ Page({
             scanType: ['barCode', 'qrCode', 'datamatrix', 'pdf417'],
             success: res => {
                 if (res.errMsg == 'scanCode:ok') {
+                    var id = res.result.split('=')[1]
                     for (let index = 0; index < that.data.detailInfo.maintainDeviceList.length; index++) {
-                        if (that.data.detailInfo.maintainDeviceList[i].snCode == res.result) {
+                        if (that.data.detailInfo.maintainDeviceList[index].deviceId == id) {
                             wx.navigateTo({
                                 url: '../toMaintainSec/toMaintainSec?deviceInfo=' + JSON.stringify(that.data.detailInfo.maintainDeviceList[index]) + '&maintainId=' + that.data.detailInfo.maintainId
                             })
@@ -95,10 +96,6 @@ Page({
             },
             fail: res => {
                 // 接口调用失败
-                wx.showToast({
-                    icon: 'none',
-                    title: '接口调用失败！'
-                })
             },
             complete: res => {
                 // 接口调用结束

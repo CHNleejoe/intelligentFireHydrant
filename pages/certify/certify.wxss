@@ -46,6 +46,10 @@ button:not([size='mini']) {
 .certify .code-btn button {
   width: 200rpx;
 }
+.certify .code-btn.disabled button {
+  background-color: #999;
+  border-color: #999;
+}
 .certify .avatar {
   width: 120rpx;
   height: 120rpx;
