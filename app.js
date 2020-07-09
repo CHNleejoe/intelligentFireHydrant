@@ -105,8 +105,8 @@ App({
         userType: null,
         userStatus: null,
 
-        requestLocation: 'http://192.168.3.21:8080/fhms-saas/api/app/v1',
-        // requestLocation: 'http://192.168.3.171:8282/fhms-saas/api/app/v1',
+        // requestLocation: 'http://192.168.3.21:8080/fhms-saas/api/app/v1',
+        requestLocation: 'http://192.168.3.171:8282/fhms-saas/api/app/v1',
         version: 'v1',
         openId: '',
         dictionarys: {},
@@ -119,9 +119,9 @@ App({
      */
     onShareAppMessage: function(res) {
         return {
-            title: 'ARKER MBTI职业定向测试',
+            title: '锦瀚智慧消防栓系统',
             path: '/pages/home/home',
-            imageUrl: 'images/logo.png' //自定义图片路径，可以是本地文件路径、代码包文件路径或者网络图片路径。支持PNG及JPG。显示图片长宽比是 5:4。
+            imageUrl: 'statics/imgs/logo.jpeg' //自定义图片路径，可以是本地文件路径、代码包文件路径或者网络图片路径。支持PNG及JPG。显示图片长宽比是 5:4。
         }
     }
 })
