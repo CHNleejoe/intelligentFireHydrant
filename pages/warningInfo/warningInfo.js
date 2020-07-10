@@ -81,8 +81,9 @@ Page({
             res.b.list.map((item, index) => {
                 var tmp = {}
                 tmp.id = index
-                tmp.longitude = item.proprietorPosLong
-                tmp.latitude = item.proprietorPosLatitude
+                var localtionObject = util.convert2TecentMap(item.proprietorPosLong, item.proprietorPosLatitude)
+                tmp.longitude = localtionObject.lng
+                tmp.latitude = localtionObject.lat
                 tmp.iconPath = '../../statics/imgs/dingwei.png'
                 tmp.location = item.posLong + '.' + item.posLatitude
                 tmp.callout = {

@@ -44,14 +44,26 @@ Page({
      * 生命周期函数--页面显示
      */
     onShow: function() {
-        console.log(app)
+        const that = this;
         this.setData({
-            userType: app.globalData.userInfo ? app.globalData.userInfo.userType : '1',
-            userStatus: app.globalData.userStatus,
-            proprietorList: app.globalData.proprietorList
+                userType: app.globalData.userInfo ? app.globalData.userInfo.userType : '1',
+                userStatus: app.globalData.userStatus,
+                proprietorList: app.globalData.proprietorList
+            })
+            // console.log(this.data.userType)
+
+        // setTimeout(function() {
+        //     if (that.data.userType == 2 || that.data.userType == 3) that.loadWarningInfo()
+        //     that.data.userType == 4 && that.loadMaintainTask(app.globalData.proprietorList)
+        // }, 700)
+        app.watch(that, {
+            userType: function(val) {
+                if (val == 2 || val == 3) {
+                    that.loadWarningInfo()
+                }
+                val == 4 && that.loadMaintainTask(app.globalData.proprietorList)
+            }
         })
-        this.data.userType == 2 && this.data.userType == 3 && this.loadWarningInfo()
-        this.data.userType == 4 && this.loadMaintainTask(app.globalData.proprietorList)
     },
     /**
      * 生命周期函数--监听页面初次渲染完成
@@ -85,6 +97,7 @@ Page({
                 }
             }
         })
+
     },
     /**
      * 获取用户的openid
@@ -131,8 +144,10 @@ Page({
                 userStatus: res.b.certificationStatus,
                 proprietorList: res.b.proprietorList
             })
-            that.data.userType == 2 && that.data.userType == 3 && that.loadWarningInfo()
-            that.data.userType == 4 && that.loadMaintainTask()
+            if (app.globalData.userType == 2 || app.globalData.userType == 3) {
+                that.loadWarningInfo()
+            }
+            app.globalData.userType == 4 && that.loadMaintainTask()
         }, function() {})
     },
     /**
@@ -167,6 +182,7 @@ Page({
     loadWarningInfo() {
         let url = api.intelligentWarningListByBuildingId
         const that = this;
+        console.log('intelligentWarningListByBuildingId')
         if (!that.data.proprietorList) return
         http.get(url, {
             proprietorId: that.data.proprietorList[0].id
@@ -176,8 +192,9 @@ Page({
             res.b.list.map((item, index) => {
                 var tmp = {}
                 tmp.id = index
-                tmp.longitude = item.posLong
-                tmp.latitude = item.posLatitude
+                var localtionObject = util.convert2TecentMap(item.proprietorPosLong, item.proprietorPosLatitude)
+                tmp.longitude = localtionObject.lng
+                tmp.latitude = localtionObject.lat
                 tmp.iconPath = '../../statics/imgs/dingwei.png'
 
                 tmp.callout = {
@@ -198,9 +215,10 @@ Page({
             that.setData({
                 markers: res.b.list,
                 mapData: {
-                    longitude: res.b.list[0].posLong,
-                    latitude: res.b.list[0].posLatitude
+                    longitude: res.b.list[0].proprietorPosLong,
+                    latitude: res.b.list[0].proprietorPosLatitude
                 },
+                mapMarkers
             })
             that.mapCtx.moveToLocation({
                 longitude: mapMarkers[0].longitude,

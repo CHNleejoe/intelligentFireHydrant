@@ -156,6 +156,28 @@ const checkMobile = function(mobile) {
     return true
 }
 
+
+const convert2TecentMap = function(lng, lat) {
+    if (lng == '' && lat == '') {
+        return {
+            lng: '',
+            lat: ''
+        }
+    }
+    var x_pi = 3.14159265358979324 * 3000.0 / 180.0
+    var x = lng - 0.0065
+    var y = lat - 0.006
+    var z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * x_pi)
+    var theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * x_pi)
+    var qqlng = z * Math.cos(theta)
+    var qqlat = z * Math.sin(theta)
+    return {
+        lng: qqlng,
+        lat: qqlat
+    }
+}
+
+
 module.exports = {
     formatTime: formatTime,
     formatTimeWithoutHMS: formatTimeWithoutHMS,
@@ -164,5 +186,6 @@ module.exports = {
     loadDictionary: loadDictionary,
     parseDictionary: parseDictionary,
     checkMobile: checkMobile,
-    formatTimeWithoutYMD: formatTimeWithoutYMD
+    formatTimeWithoutYMD: formatTimeWithoutYMD,
+    convert2TecentMap: convert2TecentMap
 }

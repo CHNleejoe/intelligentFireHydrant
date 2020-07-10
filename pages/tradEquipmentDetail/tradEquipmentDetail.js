@@ -78,6 +78,7 @@ Page({
                 i.maintainPhotos && i.maintainPhotos != '' && (i.maintainPhotosList = i.maintainPhotos.split(','))
             })
             res.b.status_label = util.parseDictionary(app, 'device_status', res.b.status)
+            res.b.deviceType_label = util.parseDictionary(app, 'traditional_device_type', res.b.deviceType)
             res.b.status == 0 && (res.b.status_class = 'stop')
             res.b.status == 1 && (res.b.status_class = 'active')
             res.b.status == 2 && (res.b.status_class = 'maintain')
