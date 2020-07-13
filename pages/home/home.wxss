@@ -150,6 +150,7 @@
 }
 .articles-container .status.maintain {
   background: #ffa136;
+  padding: 0;
 }
 .articles-container .info {
   font-size: 12px;

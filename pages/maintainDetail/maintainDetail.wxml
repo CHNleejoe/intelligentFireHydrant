@@ -3,30 +3,30 @@
 </view>
 <view class="base" hover-class="none" hover-stop-propagation="false">
     <view class="p" hover-class="none" hover-stop-propagation="false">
-        保养开始时间：{{detailInfo.beginTime}}
+        保养开始时间：{{detailInfo.beginTime?detailInfo.beginTime:''}}
     </view>
     <view class="p" hover-class="none" hover-stop-propagation="false">
-        保养结束时间：{{detailInfo.endTime}}
+        保养结束时间：{{detailInfo.endTime?detailInfo.endTime:''}}
     </view>
     <view class="p" hover-class="none" hover-stop-propagation="false">
-        保养计划开始时间：{{detailInfo.beginPlaneTime}}
+        保养计划开始时间：{{detailInfo.beginPlaneTime?detailInfo.beginPlaneTime:''}}
     </view>
     <view class="p" hover-class="none" hover-stop-propagation="false">
-        保养计划结束时间：{{detailInfo.endPlaneTime}}
+        保养计划结束时间：{{detailInfo.endPlaneTime?detailInfo.endPlaneTime:''}}
     </view>
     <view class="p" hover-class="none" hover-stop-propagation="false">
-        维修部门：{{detailInfo.organName}}
+        维修部门：{{detailInfo.organName?detailInfo.organName:''}}
     </view>
     <view class="p flex" hover-class="none" hover-stop-propagation="false">
         <text>
-            保养人：{{detailInfo.maintainPersons}}
+            保养人：{{detailInfo.maintainPersons?detailInfo.maintainPersons:''}}
         </text>
         <text>
-            设备数量：{{detailInfo.deviceNo}}
+            设备数量：{{detailInfo.deviceNo?detailInfo.deviceNo:0}}
         </text>
     </view>
     <view class="p" hover-class="none" hover-stop-propagation="false">
-        地址：{{detailInfo.address}}
+        地址：{{detailInfo.address?detailInfo.address:''}}
     </view>
     <view class="p" hover-class="none" hover-stop-propagation="false">
         备注：{{detailInfo.remark?detailInfo.remark:''}}
@@ -47,13 +47,13 @@
         </view>
         <view class="info" hover-class="none" hover-stop-propagation="false">
             <view class="p">
-                维护公司：<text class="color">{{detailInfo.organName}}</text>
+                维护公司：<text class="color">{{detailInfo.organName?detailInfo.organName:''}}</text>
             </view>
             <view class="p">
-                维护人员：<text class="color">{{detailItem.persons}}</text>
+                维护人员：<text class="color">{{detailItem.persons?detailItem.persons:''}}</text>
             </view>
             <view class="p">
-                维护时间：<text class="color">{{detailItem.maintainTime}}</text>
+                维护时间：<text class="color">{{detailItem.maintainTime?detailItem.maintainTime:''}}</text>
             </view>
             <view class="p">
                 维护项目：
